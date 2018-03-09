@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="js/jquery.min.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    (function () {
+        var _this = this;
+        function GetQueryString(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            }
+            return null;
+        };
+        var bargain_id = GetQueryString("actid");
+        var userid = GetQueryString("userid");
+        var openid = GetQueryString("openid");
+        var now_url = "http://weixin.echao.com/web_activity/bargain/index.html?userid="+(userid||0)+"&actid="+ (bargain_id||0);
+        if ( !openid ) {
+            if( !localStorage.getItem("openid") ){
+                window.location.href = "http://weixin.echao.com/app/index.php?i=4&c=entry&do=Silence&m=t_user_open&url=" + encodeURIComponent(now_url);
+                return ;
+            }else{
+                this.base.openid = localStorage.getItem("openid");
+            }
+        }else{
+            this.base.openid = openid;
+            localStorage.setItem( "openid" , openid );
+            window.location.href= now_url;
+        }
+
+        $.ajax({
+            async: false,
+            url: "http://weixin.echao.com/api/jssdk_access.php",
+            data: { url: now_url },
+            type: "GET",
+            dataType: "json",
+            success: function(data){
+                if( data && data.status ){
+                    var wxConfig = data.info || {};
+                    wxConfig.debug = true;
+                    wxConfig.jsApiList = ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone','hideMenuItems','showMenuItems','hideAllNonBaseMenuItem','showAllNonBaseMenuItem','translateVoice','startRecord','stopRecord','onVoiceRecordEnd','playVoice','onVoicePlayEnd','pauseVoice','stopVoice','uploadVoice','downloadVoice','chooseImage','previewImage','uploadImage','downloadImage','getNetworkType','openLocation','getLocation','hideOptionMenu','showOptionMenu','closeWindow','scanQRCode','chooseWXPay','openProductSpecificView','addCard','chooseCard','openCard'];
+                    wx.config( wxConfig );
+                    wx.ready(function () {
+                        wx.checkJsApi({
+                            jsApiList: wxConfig.jsApiList, // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                            success: function(res) {
+                                alert(JSON.stringify(res))
+                            }
+                        });
+                        wx.error(function(res){ alert(JSON.stringify(res)) });
+                        console.log( "999999")
+                        sharedata = {
+                            title : "参与砍价",
+                            link :  now_url,
+                            desc : "参与砍价~~~~~~~~~~~~",
+                            imgUrl: "http://master.echao.com/bargain/Public/Uploads/IMG593811d2ab928.jpeg",
+                            success: function( d ){
+                                alert( "分享成功!!" )
+                            },
+                            cancel: function(){
+                                alert( "分享失败!!!" );
+                            }
+                        };
+                        wx.onMenuShareAppMessage(sharedata);
+                        wx.onMenuShareTimeline(sharedata);
+                        wx.onMenuShareQQ(sharedata);
+                        wx.onMenuShareWeibo(sharedata);
+                    });
+                }
+            },
+            error: function(){ }
+        })
+    })()
+
+</script>
+</body>
+</html>

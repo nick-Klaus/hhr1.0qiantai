@@ -1,0 +1,1439 @@
+<!-- 统计 -->
+<template id="count_page">
+    <div class="wrapper" style="padding-top:0;">
+        <!--页面主体-->
+        <div id="scroller">
+            <div class="count_chart" style="background-color:#fff;">
+                <div class="count_recentDays" @click="base.isSelect=!base.isSelect">
+                    <p>{{base.currentTab | eachEcho 'dayList'}}</p><b :class="{active:base.isSelect}"></b>
+                    <ul v-if="base.isSelect">
+                        <li v-for="d in select.dayList" :class="{active:base.currentTab==d.val}" @click=" base.currentTab = d.val ">{{d.name}}</li>
+                    </ul>
+                </div>
+                <div class="count_chart_box" id="orderChart"></div>
+            </div>
+            <ul class="count_mid">
+                <li><p>¥ {{base.orderOne.total_price | eachTwo}}</p>订单总额(元)</li>
+                <li><p>¥ {{base.orderOne.refund | eachTwo}}</p>退款总数(元)</li>
+                <li onclick="routerHref('orderStatistics')">明细</li>
+            </ul>
+            <div class="count_box">
+                <ul class="count_main clearfix count_order">
+                    <li>
+                        <b></b>
+                        <p>今日下单</p>
+                        <div><span>{{base.orderTwo.today_order || 0}}</span>笔</div>
+                    </li>
+                    <li>
+                        <b></b>
+                        <p>今日活动</p>
+                        <div><span>{{base.activity.conduct || 0}}</span>个</div>
+                    </li>
+                    <li>
+                        <b></b>
+                        <p>今日退款</p>
+                        <div><span>{{base.orderTwo.today_refund || 0}}</span>笔</div>
+                    </li>
+                </ul>
+                <ul class="count_main clearfix count_order2">
+                    <li>
+                        <b></b>
+                        <p>今日分享</p>
+                        <div><span>{{base.activity.fx_num || 0}}</span>次</div>
+                    </li>
+                    <li>
+                        <b></b>
+                        <p>今日浏览</p>
+                        <div><span>{{base.activity.ck_num || 0}}</span>次</div>
+                    </li>
+                    <li>
+                        <b></b>
+                        <p>今日代言人</p>
+                        <div><span>{{base.orderTwo.people_num || 0}}</span>个</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="height:1rem;"></div>
+        </div>
+        <!--页面底部-->
+        <ul class="menu clearfix">
+            <li class="active">
+                <dd class="count"></dd>
+                <dt>统计</dt>
+            </li>
+            <li onclick="routerHref('manage')">
+                <dd class="admin"></dd>
+                <dt>管理</dt>
+            </li>
+            <li onclick="routerHref('review')">
+                <dd class="review"></dd>
+                <dt>审核</dt>
+            </li>
+            <li onclick="routerHref('personal')">
+                <dd class="personal"></dd>
+                <dt>个人</dt>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<!-- 统计 -> 订单统计 -->
+<template id="orderStatistics_page">
+    <div class="wrapper" style="padding-top:1.76rem;">
+        <!--页面主体-->
+        <div id="scroller">
+            
+            <template v-if=" base.dataList.length ">
+                <ul class="assetsCount_top">
+                    <li><b></b>各门店所在百分比值及成单金额</li>
+                </ul>
+                <div class="assetsCount_chart">
+                    <div class="assetsCount_chart_box" id="todayOrderPie"></div>
+                    <div class="assetsCount_chart_center flexBox">
+                        <div style="width:100%;margin:auto;">
+                            <dd style="font-size:0.5rem;">{{base.orderNum | eachTwo}}</dd>
+                            <dt>总订单额（元）</dt>
+                        </div>
+                    </div>
+                </div>
+                <ul class="assetsCount_detail orderStatistics_detail">
+                    <li v-for="d in base.dataList">
+                        <dd class="color" style="background-color:{{d.color}};"></dd>
+                        {{d.name}}
+                        <dd class="percent">{{d.y}}%</dd>
+                        <dd class="number">¥ {{d.price | eachTwo}}</dd>
+                    </li>
+                </ul>
+            </template>
+            <template v-else>
+                <div class="data_else">没有符合的数据</div>
+            </template>
+            <div style="height:1.88rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            订单统计
+        </div>
+        <ul class="review_head_title clearfix">
+            <li class="flexBox" :class=" title.tabs == 1 ? 'active' : '' " @click=" title.tabs = 1 ">
+                <dd>成交订单</dd>
+            </li>
+            <li class="flexBox" :class=" title.tabs == 2 ? 'active' : '' " @click=" title.tabs = 2 ">
+                <dd>退款订单</dd>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<!-- 统计 -> 今日下单 -->
+<template id="todayOrder_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <template v-if=" base.dataList.length ">
+                <ul class="assetsCount_top">
+                    <li><b></b>收支所占百分比统计</li>
+                </ul>
+                <div class="assetsCount_chart">
+                    <div class="assetsCount_chart_box" id="todayOrderPie"></div>
+                    <div class="assetsCount_chart_center flexBox">
+                        <div style="width:100%;margin:auto;">
+                            <dd>{{base.orderNum || 0}}<span>笔</span></dd>
+                            <dt>今日下单</dt>
+                        </div>
+                    </div>
+                </div>
+                <ul class="assetsCount_detail">
+                    <li v-for="d in base.dataList">
+                        <dd class="color" style="background-color:{{d.color}};"></dd>
+                        {{d.name}}
+                        <dd class="percent">{{d.y}}%</dd>
+                        <dd class="number">¥ {{d.price | eachTwo}}</dd>
+                    </li>
+                </ul>
+            </template>
+            <template v-else>
+                <div class="data_else">没有符合的数据</div>
+            </template>
+            <div style="height:1rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            今日下单
+        </div>
+    </div>
+</template>
+
+<!-- 管理模块 -->
+<template id="manage_page">
+    <div class="wrapper" style="padding-top:0;">
+        <!--页面主体-->
+        <div id="scroller">
+            <div class="manager_box">
+                <p>资金</p>
+                <ul class="manager_assets_item clearfix">
+                    <li onclick="routerHref('assetsCount')"><p></p>资产统计</li>
+                    <li onclick="routerHref('assetsDetail')"><p></p>资产明细</li>
+                    <li @click="_goGetCash()"><p></p>提现审核</li>
+                </ul>
+            </div>
+            <div class="manager_box">
+                <p>部门</p>
+                <ul class="manager_department_item clearfix">
+                    <li onclick="routerHref('structure')"><p></p>组织架构</li>
+                    <li onclick="routerHref('spokesman')"><p></p>代言人</li>
+                </ul>
+            </div>
+            <div class="manager_box">
+                <p>订单</p>
+                <ul class="manager_order_item clearfix">
+                    <li onclick="routerHref('todayOrder')"><p></p>今日下单</li>
+                    <li onclick="routerHref('orderStatistics')"><p></p>订单统计</li>
+                    <li @click="_goReturn()"><p></p>退款订单</li>
+                </ul>
+            </div>
+            <div class="manager_box">
+                <p>活动</p>
+                <ul class="manager_activity_item clearfix">
+                    <li onclick="routerHref('count')"><p></p>活动统计</li>
+                    <li onclick="routerHref('review')"><p></p>活动审核</li>
+                </ul>
+            </div>
+            <div style="height:1.5rem;"></div>
+        </div>
+        <!--页面底部-->
+        <ul class="menu clearfix">
+            <li onclick="backPage('count')">
+                <dd class="count"></dd>
+                <dt>统计</dt>
+            </li>
+            <li class="active">
+                <dd class="admin"></dd>
+                <dt>管理</dt>
+            </li>
+            <li onclick="routerHref('review')">
+                <dd class="review"></dd>
+                <dt>审核</dt>
+            </li>
+            <li onclick="routerHref('personal')">
+                <dd class="personal"></dd>
+                <dt>个人</dt>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<!-- 管理模块 —> 资产统计 -->
+<template id="assetsCount_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <template v-if=" base.dataList.length ">
+                <ul class="assetsCount_top">
+                    <li style="position:relative;">
+                        <b></b>收支所占百分比统计
+                        <div class="count_recentDays" @click="base.isSelect=!base.isSelect" style="right:0;top:-0.1rem;">
+                            <p>{{base.currentTab | eachEcho 'dayList'}}</p><b :class="{active:base.isSelect}"></b>
+                            <ul v-if="base.isSelect" style="background:none;">
+                                <li v-for="d in select.dayList" :class="{active:base.currentTab==d.val}" @click=" base.currentTab = d.val ">{{d.name}}</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="assetsCount_chart">
+                    <div class="assetsCount_chart_box" id="todayOrderPie"></div>
+                    <div class="assetsCount_chart_center flexBox">
+                        <div style="width:100%;margin:auto;">
+                            <dd>{{base.orderNum || 0}}<span>笔</span></dd>
+                            <dt>今日下单</dt>
+                        </div>
+                    </div>
+                </div>
+                <ul class="assetsCount_detail">
+                    <li v-for="d in base.dataList">
+                        <dd class="color" style="background-color:{{d.color}};"></dd>
+                        {{d.name}}
+                        <dd class="percent">{{d.y}}%</dd>
+                        <dd class="number">¥ {{d.price | eachTwo}}</dd>
+                    </li>
+                </ul>
+            </template>
+            <template v-else>
+                <div class="data_else">没有符合的数据</div>
+            </template>
+            <div style="height:1rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            资产统计
+        </div>
+    </div>
+</template>
+
+<!-- 管理模块 —> 资产明细 -->
+<template id="assetsDetail_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <ul class="assetsDetail_main" v-if=" base.dataList.length ">
+                <li v-for="d in base.dataList">
+                    <div class="assetsDetail_main_top clearfix">
+                        <dd>{{d.types}}</dd>
+                        <dt></dt>
+                    </div>
+                    <div class="assetsDetail_main_bottom clearfix">
+                        <dd>{{d.create_date | eachDate}}</dd>
+                        <dt>
+                            <span v-if=" d.in_out_type == 1 ">+</span>
+                            <span v-if=" d.in_out_type == 2 ">-</span>
+                            {{d.money | eachTwo}}
+                        </dt>
+                    </div>
+                </li>
+            </ul>
+            <div class="data_else" v-else>没有符合的数据</div>
+            <div class="pull_loading" style="height:1rem">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            资产明细
+            <div class="assetsDetail" @click=" base.dateSelect = true "></div>
+        </div>
+        <!--弹窗-->
+        <div class="activityDetail_pop flexBox" v-if=" base.dateSelect ">
+            <div class="activityDetail_pop_main" transition="msgPop" v-if=" base.dateSelect ">
+                <div class="assetsDetail_main_input">
+                    <div class="assetsDetail_input_info">
+                        <dd>开始时间</dd>
+                        <dt>
+                            <input type="date" v-model="base.date_start">
+                        </dt>
+                    </div>
+                    <div class="assetsDetail_input_info">
+                        <dd>结束时间</dd>
+                        <dt>
+                            <input type="date" v-model="base.date_end">
+                        </dt>
+                    </div>
+                </div>
+                <ul class="clearfix">
+                    <li @click=" base.dateSelect = false ">取消</li>
+                    <li @click="_getAssetDetail()">查询</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 管理模块 —> 组织架构 -->
+<template id="structure_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+			<div class="search_box">
+                <label>快速搜索</label><i></i>
+            </div>
+			<p class="structure_result">共<span>{{base.database.shop_num}}</span>家门店，<span>{{base.database.people_num}}</span>个员工</p>
+            <ul class="structure_item_box">
+                <li class="structure_item clearfix" v-for="p in base.database.data" @click="_goToStoreInfoPage(p.id)">
+                    <div><img v-if="p.image" :src="p.image" alt=""/></div>
+                    <ul>
+                        <li>{{p.shop_name}}</li>
+                        <li>成立时间：&nbsp;{{p.create_date}}</li>
+                        <li>地区：&nbsp;{{p.address}}</li>
+                    </ul>
+                    <p>{{p.people_num}}<b></b></p>
+                </li>
+            </ul>
+            <div style="height:2rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+		<div class="main_head">
+			<dd class="back" onclick="goBack()">返回</dd>
+			组织架构
+		</div>
+    </div>
+</template>
+
+<!-- 管理模块 —> 组织架构 -> 店铺信息-->
+<template id="storeInfo_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller" style="margin-top:2.55rem;">
+            <ul class="structure_item_box">
+                <li class="structure_item storeInfo_spokesman clearfix" v-for="p in base.database.shopowner" @click="_goToDataInfoPage(p.id)">
+                    <div><img v-if="p.headimgurl" :src="p.headimgurl" alt=""/></div>
+                    <ul>
+                        <li>{{p.nickname}}</li>
+                        <li>{{p.mobile}}</li>
+                    </ul>
+                    <p class="storeInfo_shopowner">店长<b></b></p>
+                </li>
+                <li class="structure_item storeInfo_spokesman clearfix" v-for="p in base.database.staff" @click="_goToDataInfoPage(p.id)">
+                    <div><img v-if="p.headimgurl" :src="p.headimgurl" alt=""/></div>
+                    <ul>
+                        <li>{{p.nickname}}</li>
+                        <li>{{p.mobile}}</li>
+                    </ul>
+                    <p><b></b></p>
+                </li>
+            </ul>
+            <div style="height:3.5rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="head_box">
+            <div class="main_head">
+                <dd class="back" onclick="goBack()">返回</dd>
+                店铺信息
+            </div>
+            <div class="storeInfo_store structure_item clearfix" onclick="routerHref('storeData')">
+                <div><img v-if="base.database.data[0].image" :src="base.database.data[0].image" alt=""/></div>
+                <ul>
+                    <li>{{base.database.data[0].shop_name}}</li>
+                    <li>成立时间：&nbsp;{{base.database.data[0].create_date}}</li>
+                    <li>地区：&nbsp;{{base.database.data[0].address}}</li>
+                </ul>
+                <p>12<b></b></p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 管理模块 —> 组织架构 -> 店铺信息 ->店铺资料-->
+<template id="storeData_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <div class="storeData_head">
+                <div class="storeDate_img"><img v-if="base.database.image" :src="base.database.image" alt=""/></div>
+                <h3>{{base.database.shop_name}}</h3>
+            </div>
+            <ul class="storeData_mid clearfix">
+                <li>
+                    <p><b>{{base.database.order_num}}</b>个</p>
+                    <div>参与活动</div>
+                    <dd>点击查看</dd>
+                </li>
+                <li>
+                    <p><b>{{base.database.order_num}}</b>个</p>
+                    <div>成交订单</div>
+                    <dd>点击查看</dd>
+                </li>
+            </ul>
+            <ul class="storeData_bottom">
+                <li><span>联系电话</span><b>{{base.database.connect_tel}}</b></li>
+                <li class="clearfix"><span>店铺地址</span><b>{{base.database.address}}</b></li>
+            </ul>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            店铺资料
+        </div>
+    </div>
+</template>
+
+<!-- 管理模块 —> 代言人 -->
+<template id="spokesman_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+			<div class="search_box">
+                <label>快速搜索</label><i></i>
+            </div>
+            <p class="structure_result">共<span>{{base.database.shop_num}}</span>家门店，<span>{{base.database.staff.length}}</span>个员工</p>
+            <!-- <ul class="structure_item_box spokesman_classify" v-if="0&&sortWay=='a'"> -->
+                <!-- <li class="structure_item" @click="_sortStaffs('b')"><i></i>按店铺<b></b></li> -->
+                <!-- <li class="structure_item" @click="_sortStaffs('c')"><i></i>按等级<b></b></li> -->
+            <!-- </ul> -->
+            <ul class="structure_item_box spokesman_listBox">
+                <li class="spokesman_list structure_item storeInfo_spokesman clearfix" v-for="p in base.database.staff | orderBy p.id" @click="_goToDataInfoPage(p.id)">
+                    <div><img v-if="p.headimgurl" :src="p.headimgurl" alt=""/></div>
+                    <ul>
+                        <li class="spokesman_name" userLevel="{{p.user_level}}" shopownerId="{{p.shopowner_id}}" shopName="{{p.shop_name}}">{{p.nickname}}</li>
+                        <li>{{p.mobile}}</li>
+                    </ul>
+                    <p><b></b></p>
+                </li>
+            </ul>
+            <div style="height:2rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+		<div class="main_head">
+			<dd class="back" @click="_goBack()">返回</dd>
+			代言人
+		</div>
+    </div>
+</template>
+
+<!-- 审核模块 -->
+<template id="review_page">
+    <div class="wrapper" style="padding-top:1.68rem;">
+        <!--页面主体-->
+        <div id="scroller">
+            <section v-show=" base.title == 'a' ">
+                <template v-if=" base.dataList.length ">
+                    <div class="review_main" v-for=" d in base.dataList ">
+                        <div class="review_info">
+                            <div class="review_info_top">
+                                <div class="review_info_img flexBox">
+                                    <img :src=" d.image_logo " alt="">
+                                </div>
+                                <div class="review_info_main">
+                                    <div class="review_info_title">{{d.activity_title}}</div>
+                                    <div class="review_info_price clearfix">
+                                        <dd>{{d.floor_price | eachTwo}}</dd>
+                                        <dt>{{d.quantity || 0}} 件</dt>
+                                    </div>
+                                    <ul class="review_info_other">
+                                        <li>活动类型：{{d.activity_type | eachEcho 'typeName'}}</li>
+                                        <li>启动资金：￥{{d.start_up_money_all | eachTwo}}</li>
+                                        <li>开始时间：{{d.start_time}}</li>
+                                        <li>结束时间：{{d.end_time}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="review_info_bottom clearfix">
+                                <button v-if=" d.status == 1 && d.open_off == 1 " @click="_closeActivity(d.activity_type,d.id,2)">开启</button>
+                                <button v-if=" d.status == 1 && d.open_off == 2 " @click="_closeActivity(d.activity_type,d.id,1)">关闭</button>
+                                <button v-if=" d.status == 0 " @click="_goReview(d.activity_type,d.id)">审核</button>
+                                <!-- <button v-if=" d.status == 0 ">编辑</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </section>
+            <section v-show=" base.title == 'b' ">
+                <template v-if=" base.cashList.length ">
+                    <div class="review_main" v-for=" d in base.cashList ">
+                        <div class="review_info">
+                            <div class="cash_title clearfix">
+                                <dd>提现申请</dd>
+                                <dt>￥{{d.real_pay | eachTwo}}</dt>
+                            </div>
+                            <div class="cash_info" @click="_goDataInfo()">
+                                <div class="cash_info_box">
+                                    <div class="cash_info_img">
+                                        <img :src=" d.headimgurl " alt="">
+                                    </div>
+                                    <ul class="cash_info_mid">
+                                        <li class="first">
+                                            {{d.nickname}}
+                                            <span>{{d.user_level | eachLevel}}</span>
+                                        </li>
+                                        <li class="second">{{d.mobile}}</li>
+                                        <!-- <li class="third">{{d.nickname}}</li> -->
+                                    </ul>
+                                    <div class="cash_info_right"></div>
+                                </div>
+                            </div>
+                            <div class="review_info_bottom clearfix">
+                                <dd>{{d.create_time | eachDate 'YYYY-MM-DD HH:mm:ss'}}</dd>
+                                <button v-if=" d.status == 0 " @click="_showCashReview(d)">审核</button>
+                                <!-- <button v-if=" d.status == 0 ">退回</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </section>
+            <section v-show=" base.title == 'c' ">
+                <template v-if=" base.returnList.length ">
+                    <div class="order_info" v-for=" d in base.returnList ">
+                        <ul class="order_info_head">
+                            <li>{{d.order_no}}</li>
+                            <li class="right">{{d.pay_status | eachEcho 'statusReview'}}</li>
+                        </ul>
+                        <div class="order_info_top">
+                            <div class="order_info_img flexBox">
+                                <img :src=" d.title_pic " alt="">
+                            </div>
+                            <div class="order_info_main">
+                                <div class="order_info_title">{{d.title}}</div>
+                                <div class="order_info_price clearfix">
+                                    <dd>{{d.unit_price | eachTwo}}</dd>
+                                    <dt>× {{d.number}}</dt>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order_info_total">共 <span>{{d.number}}</span> 件商品，合计 <span>¥ {{d.total_price | eachTwo}}</span> 元</div>
+                        <div class="order_info_bottom clearfix" v-if=" d.pay_status == 4 ">
+                            <button @click="_showReturnReview(d)" style="width:1.3rem;">审核</button>
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </section>
+
+            <div class="pull_loading" style="height:2.9rem">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="review_head">
+            <div class="review_head_top flexBox">
+                <ul class="review_head_ul clearfix">
+                    <li :class=" base.title == 'a' ? 'active' : '' " @click=" base.title = 'a' ">活动</li>
+                    <li :class=" base.title == 'b' ? 'active' : '' " @click=" base.title = 'b' ">提现</li>
+                    <li :class=" base.title == 'c' ? 'active' : '' " @click=" base.title = 'c' ">退款</li>
+                </ul>
+            </div>
+            <ul class="review_head_title clearfix">
+                <li class="flexBox" :class=" title.tabs == 0 ? 'active' : '' " @click=" title.tabs = 0 ">
+                    <dd>未审核</dd>
+                </li>
+                <li class="flexBox" :class=" title.tabs == 1 ? 'active' : '' " @click=" title.tabs = 1 ">
+                    <dd>已审核</dd>
+                </li>
+            </ul>
+        </div>
+        <ul class="menu clearfix">
+            <li onclick="backPage('count')">
+                <dd class="count"></dd>
+                <dt>统计</dt>
+            </li>
+            <li onclick="backPage('manage')">
+                <dd class="admin"></dd>
+                <dt>管理</dt>
+            </li>
+            <li class="active">
+                <dd class="review"></dd>
+                <dt>审核</dt>
+            </li>
+            <li onclick="routerHref('personal')">
+                <dd class="personal"></dd>
+                <dt>个人</dt>
+            </li>
+        </ul>
+        <!--弹窗-->
+        <div class="activityDetail_pop flexBox" v-if=" base.isPop ">
+            <div class="activityDetail_pop_main" transition="msgPop" v-if=" base.isPop ">
+                <p>确定该申请通过审核？</p>
+                <ul class="clearfix">
+                    <li @click=" base.isPop = false ">取消</li>
+                    <li @click="_passCashReview()" v-if=" base.title == 'b' ">确定</li>
+                    <li @click="_passReturnReview()" v-if=" base.title == 'c' ">确定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 审核模块 -> 活动详情 -->
+<template id="activityDetail_page">
+    <div class="wrapper" style="padding-top:1.1rem;">
+        <!--页面主体-->
+        <div id="scroller">
+            <section v-show=" base.type == 1 ">
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        活动信息
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityboss_info textarea">
+                            <dd>活动标题</dd>
+                            <dt>{{base.database.title}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>活动类型</dd>
+                            <dt>{{base.type | eachEcho 'typeName'}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>开始时间</dd>
+                            <dt>{{base.database.start_time}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>结束时间</dd>
+                            <dt>{{base.database.end_time}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>启动资金</dd>
+                            <dt>
+                                {{base.database.start_up_money_all | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>库存数量</dd>
+                            <dt>
+                                {{base.database.product_quantity || 0}}
+                                <span>件</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>产品价格</dd>
+                            <dt>
+                                {{base.database.original_price | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>活动价格</dd>
+                            <dt>
+                                {{base.database.floor_price | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        活动产品
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_selected">
+                            <div class="addActivityNew_selected_img flexBox">
+                                <img :src=" base.product.image | eachImage " alt="">
+                            </div>
+                            <div class="addActivityNew_selected_info">
+                                <div class="addActivityNew_selected_title">{{base.product.name}}</div>
+                                <div class="addActivityNew_selected_price clearfix">
+                                    <dd>{{base.product.money | eachTwo}}</dd>
+                                    <dt>{{base.product.stock || 0}} 件</dt>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        分享金
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityboss_info">
+                            <dd>分享</dd>
+                            <dt class="right">
+                                {{base.database.share_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>转发</dd>
+                            <dt class="right">
+                                {{base.database.forward_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>浏览</dd>
+                            <dt class="right">
+                                {{base.database.browse_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        订单佣金
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityboss_info">
+                            <dd>成单佣金</dd>
+                            <dt>
+                                {{base.database.sale_profit}}
+                                <span>%</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>直接代言人</dd>
+                            <dt>
+                                {{base.database.direct_profit}}
+                                <span>%</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>间接代言人</dd>
+                            <dt>
+                                {{base.database.indirect_profit}}
+                                <span>%</span>
+                            </dt>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        产品轮播图
+                    </div>
+                    <div class="addActivityNew_main_other clearfix">
+                        <ul>
+                            <li class="clearfix" v-for="d in base.banner_top">
+                                <img :src=" d " alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        产品描述
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_main_other clearfix">
+                            {{base.database.product_introduction}}
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        产品详情图
+                    </div>
+                    <div class="addActivityNew_main_other clearfix">
+                        <ul>
+                            <li class="clearfix" v-for="d in base.product_introduction_img">
+                                <img :src=" d " alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section v-show=" base.type == 2 ">
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        活动信息
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityboss_info textarea">
+                            <dd>活动标题</dd>
+                            <dt>{{base.database.title}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>活动类型</dd>
+                            <dt>{{base.type | eachEcho 'typeName'}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>开始时间</dd>
+                            <dt>{{base.database.start_time}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>结束时间</dd>
+                            <dt>{{base.database.end_time}}</dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>启动资金</dd>
+                            <dt>
+                                {{base.database.start_up_money_all | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>库存数量</dd>
+                            <dt>
+                                {{base.database.gift_quantity || 0}}
+                                <span>件</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>产品价格</dd>
+                            <dt>
+                                {{base.database.original_price | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>活动底价</dd>
+                            <dt>
+                                {{base.database.floor_price | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>帮砍次数</dd>
+                            <dt>
+                                {{base.database.bargain_times | eachTwo}}
+                                <span>次</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>最高减价</dd>
+                            <dt>
+                                {{base.database.max_sale | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>最低减价</dd>
+                            <dt>
+                                {{base.database.min_sale | eachTwo}}
+                                <span>元</span>
+                            </dt>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        活动产品
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_selected">
+                            <div class="addActivityNew_selected_img flexBox">
+                                <img :src=" base.product.image | eachImage " alt="">
+                            </div>
+                            <div class="addActivityNew_selected_info">
+                                <div class="addActivityNew_selected_title">{{base.product.name}}</div>
+                                <div class="addActivityNew_selected_price clearfix">
+                                    <dd>{{base.product.money | eachTwo}}</dd>
+                                    <dt>{{base.product.stock || 0}} 件</dt>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        分享金
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityboss_info">
+                            <dd>分享</dd>
+                            <dt class="right">
+                                {{base.database.share_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>转发</dd>
+                            <dt class="right">
+                                {{base.database.forward_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                        <div class="addActivityboss_info">
+                            <dd>浏览</dd>
+                            <dt class="right">
+                                {{base.database.browse_money_time | eachTwo}}
+                                <span>元/次</span>
+                            </dt>
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        产品banner图
+                    </div>
+                    <div class="addActivityNew_main_other clearfix">
+                        <ul>
+                            <li class="clearfix">
+                                <img :src=" base.database.image_logo " alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        产品描述
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_main_other clearfix">
+                            {{base.database.gift_describe_txt}}
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        奖品图
+                    </div>
+                    <div class="addActivityNew_main_other clearfix">
+                        <ul>
+                            <li class="clearfix" v-for="d in base.gift_describe">
+                                <img :src=" d " alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        活动规则
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_main_other clearfix">
+                            {{base.database.activity_rules}}
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        领奖信息
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_main_other clearfix">
+                            {{base.database.award_information}}
+                        </div>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        机构图片
+                    </div>
+                    <div class="addActivityNew_main_other clearfix">
+                        <ul>
+                            <li class="clearfix" v-for="d in base.company_introduction_img">
+                                <img :src=" d " alt="">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="addActivityboss_main">
+                    <div class="addActivityboss_title">
+                        <dd></dd>
+                        机构描述
+                    </div>
+                    <div class="addActivityboss_main_box">
+                        <div class="addActivityNew_main_other clearfix">
+                            {{base.database.company_introduction}}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="review_block"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            活动详情
+        </div>
+        <div class="bottom_btn" @click=" base.isPop = true ">审核</div>
+        <!--弹窗-->
+        <div class="activityDetail_pop flexBox" v-if=" base.isPop ">
+            <div class="activityDetail_pop_main" transition="msgPop" v-if=" base.isPop ">
+                <p>确认信息无误审核通过？</p>
+                <ul class="clearfix">
+                    <li @click=" base.isPop = false ">不通过</li>
+                    <li @click="_passActivity()">通过</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 审核模块 -> 资料信息 -->
+<template id="dataInfo_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <div class="dataInfo_top">
+                <ul>
+                    <li>{{base.database.nickname}}&nbsp;<span>{{base.database.user_level | eachLevel}}</span></li>
+                    <li>{{base.database.mobile}}</li>
+                    <li>{{base.database.shop_name}}</li>
+                    <li>{{base.database.createtime | eachDate}} 加入</li>
+                </ul>
+                <!-- <p></p> -->
+                <div><img :src="base.database.headimgurl" alt=""/></div>
+            </div>
+            <ul class="dataInfo_num clearfix">
+                <li><p>{{base.database.amount | eachTwo}}</p>可提现金额(元)</li>
+                <li><p>{{base.database.coupon | eachTwo }}</p>现金券金额(元)</li>
+                <li><p>{{base.database.profit_all | eachTwo}}</p>总资产(元)</li>
+            </ul>
+            <div class="dataInfo_runningOrder"><p>{{base.database.order_count}} </p>进行中订单</div>
+            <ul class="dataInfo_nav clearfix">
+                <li :class="{active:title.tab=='a'}" @click="_getStaffInfo()" v-if="0"><p>本月成绩</p></li>
+                <li class="onlyOne" :class="{active:title.tab=='b'}" @click="_getStaffInfoAll()"><p>累计成绩</p></li>
+            </ul>
+            <template v-if="base.database">
+                <div class="dataInfo_map">
+                    <p>分享地点分布图(10Km范围内)</p>
+                    <div class="dataInfo_map_main">
+                        <div><img src="./img/review/dataInfo_map.png" alt=""/></div>
+                        <dd v-if="title.tab=='a'">本月分享次数 {{base.database.share_all}} 次</dd>
+                        <dd v-if="title.tab=='b'">累计分享次数 {{base.database.share_all}} 次</dd>
+                    </div>
+                </div>
+                <ul class="dataInfo_box">
+                    <li><p>{{base.database.profit_all | eachTwo}}</p>活动总收益(元)</li>
+                    <li class="dataInfo_box_tips"><p>订单佣金(元) {{base.database.commission_price_all | eachTwo}}</p>活动分享金(元) {{base.database.share_price_all}}</li>
+                </ul>
+                <ul class="dataInfo_box">
+                    <li><p>{{base.database.order_count}}</p>订单总量(笔)</li>
+                    <li class="dataInfo_box_tips">成交订单总金额(元) {{base.database.order_total | eachTwo}}</li>
+                </ul>
+                <ul class="dataInfo_box">
+                    <li><p>{{base.database.share_price_all1}}%</p>活动分享金收益占比</li>
+                    <li><p>{{base.database.commission_price_all1}}%</p>订单佣金收益占比</li>
+                    <li><p>{{base.database.people_num}}</p>吸引客户(个)</li>
+                    <li><p>{{base.database.forward_all}}</p>转发次数</li>
+                    <!-- <li v-if="0"><p>2056.00</p>客单价(元)</li>
+                    <li v-if="0"><p>2056.00</p>件单价(元)</li> -->
+                </ul>
+            </template>
+            <template v-else>
+                <div class="data_else">没有符合的数据</div>
+            </template>
+            <div style="height:1.1rem"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            资料信息
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -->
+<template id="personal_page">
+    <div class="wrapper" style="padding-top:0;">
+        <!--页面主体-->
+        <div id="scroller" :class="{blur:pop.isPop}">
+            <div class="personal_toggle" @click="pop.isPop=true" v-if=" base.is_manager == 1 "><b></b>切换</div>
+            <div class="personal_top">
+                <div onclick="routerHref('personalData')"><img v-if="base.personal.headimgurl" :src="base.personal.headimgurl" alt=""/></div>
+                <p onclick="routerHref('personalData')">{{base.personal.nickname}}</p>
+            </div>
+            <ul class="personal_num clearfix">
+                <li><p>{{base.database.amount | eachTwo}}</p>可用余额(元)</li>
+                <li><p>{{base.database.consume | eachTwo}}</p>已消费金额(元)</li>
+            </ul>
+            <ul class="personal_box clearfix">
+                <li onclick="routerHref('recharge')"><p></p>充值</li>
+                <li onclick="routerProductAdd('getCash',1)"><p></p>提现</li>
+                <!-- <li v-if="0"><p></p>银行卡</li> -->
+				<li onclick="routerHref('message')"><p></p>消息</li>
+                <li class="personal_box_left"></li>
+                <li class="personal_box_right"></li>
+            </ul>
+            <ul class="personal_box clearfix personal_box2">
+                <!-- <li onclick="routerHref('message')"><p></p>消息</li> -->
+                <li onclick="routerHref('passwordSetting')"  v-if="0"><p></p>密码设置</li>
+                <li><p></p>更多</li>
+            </ul>
+            <div style="height:1rem;"></div>
+        </div>
+        <!--页面底部-->
+        <ul class="menu clearfix" :class="{blur:pop.isPop}">
+            <li onclick="backPage('count')">
+                <dd class="count"></dd>
+                <dt>统计</dt>
+            </li>
+            <li onclick="backPage('manage')">
+                <dd class="admin"></dd>
+                <dt>管理</dt>
+            </li>
+            <li onclick="backPage('review')">
+                <dd class="review"></dd>
+                <dt>审核</dt>
+            </li>
+            <li class="active">
+                <dd class="personal"></dd>
+                <dt>个人</dt>
+            </li>
+        </ul>
+        <!--弹窗-->
+        <div class="pop" v-if="pop.isPop">
+            <div class="personal_pop">
+                <p>当前权限角色为{{pop.selectedItem | eachEcho 'power'}}</p>
+                <ul>
+                    <li :class=" pop.selectedItem == 1 ? 'active' : '' " @click=" pop.selectedItem = 1 ">老板</li>
+                    <li :class=" pop.selectedItem == 2 ? 'active' : '' " @click="_goShopPage()">店长</li>
+                    <li :class=" pop.selectedItem == 3 ? 'active' : '' " @click="_goStaffPage(3)">店员</li>
+                    <li :class=" pop.selectedItem == 4 ? 'active' : '' " @click="_goStaffPage(4)">代言人</li>
+                </ul>
+            </div>
+            <div class="close" @click="pop.isPop=false"></div>
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -> 个人资料 -->
+<template id="personalData_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <ul class="personalData_main">
+                <li class="clearfix" onclick="routerProductAdd('personalDataEdit',1)">
+                    <span>头像</span>
+                    <div class="personalData_headPic">
+                        <div>
+                            <img :src=" base.database.headimgurl " alt=""/>
+                        </div>
+                        <b></b>
+                    </div>
+                </li>
+                <li onclick="routerProductAdd('personalDataEdit',2)">
+                    用户名
+                    <div>
+                        {{base.database.nickname}}
+                        <b></b>
+                    </div>
+                </li>
+                <!-- <li>姓名<div>某某某<b></b></div></li> -->
+                <li onclick="routerProductAdd('personalDataEdit',3)">
+                    联系电话
+                    <div>
+                        {{base.database.mobile}}
+                        <b></b>
+                    </div>
+                </li>
+                <li onclick="routerProductAdd('personalDataEdit',4)">
+                    企业名称
+                    <div>
+                        {{base.database.company}}
+                        <b></b>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            个人资料
+        </div>
+    </div>
+</template>
+
+<!-- 个人 -> 个人资料修改 -->
+<template id="personalData_edit">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <div class="personalEdit_main">
+                <div class="personalEdit_info img" v-show=" base.type == 1 ">
+                    <dd>头像</dd>
+                    <dt>
+                        <img :src=" base.headimgurl " alt="">
+                    </dt>
+                    <input type="file" @change="_selectImg($event.currentTarget.files)">
+                </div>
+                <div class="personalEdit_info" v-show=" base.type == 2 ">
+                    <dd>用户名</dd>
+                    <dt class="clearfix">
+                        <input type="text" v-model=" base.nickname " placeholder="请输入您的用户名">
+                    </dt>
+                </div>
+                <div class="personalEdit_info" v-show=" base.type == 3 ">
+                    <dd>联系电话</dd>
+                    <dt class="clearfix">
+                        <input type="tel" maxlength="11" v-model=" base.mobile "  placeholder="请输入您的联系电话">
+                    </dt>
+                </div>
+                <div class="personalEdit_info" v-show=" base.type == 4 ">
+                    <dd>企业名称</dd>
+                    <dt class="clearfix">
+                        <input type="text" v-model=" base.company " placeholder="请输入您的企业名称">
+                    </dt>
+                </div>
+            </div>
+            <div class="personalEdit_btn">
+                <button @click="_save()">保存</button>
+            </div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            个人资料修改
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -> 充值 -->
+<template id="recharge_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <ul class="recharge_top">
+                <li class="recharge_txt">
+                    <input v-model=" base.recharge " type="number" placeholder="请输入你充值的金额">
+                </li>
+                <li class="recharge_total">您当前的可用余额为 ¥ {{base.database.amount | eachTwo}} 元</li>
+            </ul>
+            <ul class="recharge_main clearfix">
+                <li v-for="d in select.recharge" :class=" base.recharge == d.val ? 'active' : '' " @click="_selectRecharge(d.val)">
+                    <button>{{d.name}}</button>
+                </li>
+            </ul>
+            <div class="recharge_btn">
+                <button @click="_showRecharge()">充值</button>
+            </div>
+            <div style="width:100%;height:1rem;"></div>
+        </div>
+        <!--页面顶部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            充值
+        </div>
+        <!--弹窗-->
+        <div class="activityDetail_pop flexBox" v-if=" base.isPop ">
+            <div class="activityDetail_pop_main" transition="msgPop" v-if=" base.isPop ">
+                <p>充值成功后会离开当前页面，确定充值吗？</p>
+                <ul class="clearfix">
+                    <li @click=" base.isPop = false ">取消</li>
+                    <li @click="_goRecharge()">确定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -> 提现 -->
+<template id="getCash_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller" style="height:93.5%;margin-bottom:0.1rem;">
+            <ul class="recharge_top getCash_top">
+                <li class="getCash_title">提现金额</li>
+                <li class="getCash_value clearfix" @click=" base.keyBoard = true ">
+                    <dd>¥</dd>
+                    <!-- <input type="number" placeholder="请输入提现金额" @focus=" base.keyBoard = true "> -->
+                    <span>{{base.number}}</span>
+                    <span v-if=" base.keyBoard " class="inputLine"></span>
+                </li>
+                <li class="recharge_total" style="line-height:0.32rem;padding-top:0.12rem;">
+                    可提现余额为 ¥ {{base.database.amount}} 元<br>
+                    <span style="color:#ff4646">(一天最多只能提现10次，且每次不能小于1元或大于200元)</span>
+                </li>
+            </ul>
+            <div class="recharge_btn" style="margin-top:1rem;">
+                <button @click="_bossGetCash()">提现</button>
+            </div>
+            <div style="width:100%;height:1rem;"></div>
+        </div>
+        <!--页面顶部-->
+        <div class="main_head">
+            <dd class="back" onclick="backPage('personal')">返回</dd>
+            提现
+        </div>
+        <!--键盘-->
+        <table class="getCash_keyBoard" transition="keyBoard" v-if=" base.keyBoard ">
+            <tbody>
+            <tr>
+                <td style="border-left:none;" @click="_fillInput(1)">1</td>
+                <td @click="_fillInput(2)">2</td>
+                <td @click="_fillInput(3)">3</td>
+                <td rowspan="2" style="border-right:none;" @click="_deleteInput()"></td>
+            </tr>
+            <tr>
+                <td style="border-left:none;" @click="_fillInput(4)">4</td>
+                <td @click="_fillInput(5)">5</td>
+                <td @click="_fillInput(6)">6</td>
+            </tr>
+            <tr>
+                <td style="border-left:none;" @click="_fillInput(7)">7</td>
+                <td @click="_fillInput(8)">8</td>
+                <td @click="_fillInput(9)">9</td>
+                <td rowspan="2" style="border-right:none;border-bottom:none;" @click="_bossGetCash()">确定</td>
+            </tr>
+            <tr>
+                <td style="border-left:none;border-bottom:none;" @click="_fillInput('.')">.</td>
+                <td style="border-bottom:none;" @click="_fillInput(0)">0</td>
+                <td @click=" base.keyBoard = false " style="border-bottom:none;"></td>
+            </tr>
+            </tbody>
+        </table>
+        <!--弹窗-->
+        <div class="activityDetail_pop flexBox" v-if=" base.isPop ">
+            <div class="activityDetail_pop_main" transition="msgPop" v-if=" base.isPop ">
+                <p>第一次提现需授权一次，确定进行授权吗？</p>
+                <ul class="clearfix">
+                    <li @click=" base.isPop = false ">取消</li>
+                    <li @click="_goGetOpenid()">确定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -> 消息 -->
+<template id="message_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller" :class="{blur:base.isPop}">
+            <ul class="message_main" v-if=" base.dataList.length ">
+                <li v-for="d in base.dataList" :class=" d.record_status == 1 ? 'active' : '' " @click="_showDetail(d,$index)">
+                    <dd></dd>
+                    {{d.headline}}
+                    <dt>{{d.create_time | eachDate}}</dt>
+                </li>
+            </ul>
+            <div class="data_else" v-else>没有相关消息</div>
+            <div class="pull_loading" style="height:0.88rem;"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="main_head" :class="{blur:base.isPop}">
+            <dd class="back" onclick="goBack()">返回</dd>
+            消息
+        </div>
+        <!--弹窗-->
+        <div class="pop" v-if=" base.isPop ">
+            <div class="message_pop">
+                <div class="message_pop_title">{{base.title}}</div>
+                <div class="message_pop_info">{{base.detail}}</div>
+                <div class="message_pop_date">{{base.date | eachDate}}</div>
+            </div>
+            <div class="close" @click=" base.isPop = false "></div>
+            <div class="message_delete">
+                <button @click="_delOneMessage()">删除</button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 个人模块 -> 密码设置 -->
+<template id="passwordSetting_page">
+    <div class="wrapper">
+        <!--页面主体-->
+        <div id="scroller">
+            <ul class="storeSetting_box pwdSetting_box">
+                <li class="clearfix">
+                    <p>密码更改</p>
+                    <div><input type="text" placeholder="请输入新密码"/></div>
+                </li>
+                <li class="clearfix">
+                    <p>密码确认</p>
+                    <div><input type="text" placeholder="再次输入新密码"/></div>
+                </li>
+            </ul>
+            <div class="storeSetting_btn" @click="isPop=true">保存</div>
+        </div>
+        <!--页面顶部-->
+        <div class="main_head">
+            <dd class="back" onclick="goBack()">返回</dd>
+            密码设置
+        </div>
+        <!--弹窗-->
+        <div class="pop" v-if="isPop">
+            <div class="pwd_pop">
+                <dd></dd>保存成功
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--404页面-->
+<template id="error_page">
+    <div class="wrapper error_bg">
+        <!--主体内容-->
+        <div id="scroller" class="error_bg">
+            <div class="error_main">
+                404
+            </div>
+        </div>
+    </div>
+</template>

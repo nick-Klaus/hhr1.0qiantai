@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="must-revalidate">
+    <script>
+        setRem();
+        window.addEventListener("orientationchange", setRem, false);
+        window.addEventListener("resize", setRem, false);
+        function setRem(){
+            var html = document.getElementsByTagName('html')[0];
+
+            var pageWidth = html.getBoundingClientRect().width;
+
+            pageWidth = pageWidth > 750 ? 750 : pageWidth;
+
+            html.style.fontSize = pageWidth / 7.5 + "px";
+
+        }
+    </script>
+    <title></title>
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+</head>
+
+<style>
+    /*初始化*/
+    *{font-size:15px;box-sizing: border-box;}
+    article,aside,audio,body,dd,div,dl,dt,footer,form,h1,h2,h3,h4,h5,h6,header,hr,iframe,input,label,menu,nav,ol,p,section,select,td,textarea,th,time,ul,video,span,img{margin:0;padding:0;}
+    article,aside,audio,canvas,footer,header,nav,section,video{display:block}
+    input::-webkit-search-cancel-button{display:none;}
+    form{display:inline}
+    input,button,select,textarea{font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;}
+    html{width:100%;height:100%;overflow: hidden;}
+    body{color:#141414;word-wrap:break-all;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;width:100%;height:100%;background:#ffffff;-webkit-tap-highlight-color:rgba(93,156,236,0.5);}
+    textarea{resize:none;-webkit-appearance:none;overflow: hidden;}
+
+    iframe,img{border:0;}
+    ol,ul{list-style:none;}
+    h1,h2,h3,h4,h5,h6{color:#141414;font-weight:400}
+    input,label,select,textarea{outline:0;-webkit-user-modify:read-write-plaintext-only;-webkit-tap-highlight-color:transparent;}
+    button{-webkit-appearance:none;outline:0;}
+    label{-webkit-user-modify:read-only}
+    input{border:none;background:0 0;-webkit-appearance:none;}
+    input[type=search],input[type=text]{padding-top:0.1rem!important;padding-bottom:0.1rem!important;}
+    a{color:#141414;text-decoration:none;}
+    select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit-box-shadow:none;box-shadow:none;-webkit-appearance:none}
+
+    .clearfix:after{clear:both;content:"";display: block;}
+    .main{width:100%;height:100%;background:#fbf9fe;padding-bottom:0.2rem;overflow: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;}
+
+
+    /*顶部个人信息*/
+    .index_logo{background-color: #ffffff;margin-bottom: 0.2rem}
+    .index_logo_content a{float: right}
+    .index_logo_info{width:1rem;height: 1rem;float: left;margin: 0.3rem}
+    .index_logo_content {padding-top: 0.2rem}
+    .index_logo_content .p3{color: #ee7737;font-size: 0.23rem}
+    .index_logo_content a{margin: -1rem 0.3rem 0 0}
+    .index_logo_content .p2 span{color: red}
+
+    /*制作新的活动*/
+    .new_act{background-color: #ffffff;padding-bottom: 0.1rem;margin-bottom: 0.2rem}
+    .new_act span{width: 0.4rem;height: 0.4rem;margin: 0.3rem; display: inline-block;float: left}
+    .new_act_content{padding: 0.3rem 0 0 0.3rem;overflow: auto}
+    .new_act_content a{float: right;margin: -0.7rem 0.3rem 0 0}
+    .new_act .p5{color: #ff3300;font-size: 0.23rem}
+
+    /*活动状态*/
+    .act_status{background-color: #ffffff;width: 100%;position: relative}
+    .act_status ul{display: flex;text-align: center;color: #666666;padding: 0.2rem 0;width: 100%}
+    .act_status ul li{float: left;flex: 1;}
+    .act_status .act_status_thumbnail{width: 1.2rem;height: 1.2rem;margin: 0.2rem}
+    .act_status_content{width: 95%;margin: 0 auto 0.2rem auto; }
+    .act_status_thumbnail{float: left}
+    .act_status_abstract{margin: 0.2rem 0 0 0}
+    .act_status_abstract .p8{color: #808080;font-size: 0.23rem;border-bottom: solid 0.01rem #e5e5e5;padding-bottom: 0.3rem}
+    .act_status_abstract .p7 span{color: #808080;font-size: 0.23rem}
+    .act_status_content:nth-child(odd){ background-color: #F0F0F0}
+    .act_status_content ul li a{text-decoration: none}
+    .act_status_content ul li p{color:#27a1f7}
+    .act_status_head{height: 0.9rem;border-bottom:solid 0.01rem #e5e5e5;}
+    .act_status_head li{height: 0.7rem;width: 20%}
+    .act_status_head li a{text-decoration: none}
+    .act_line{position: relative}
+    .act_status_head_buttom{border-bottom: 0.05rem solid #f0ad4e;width: 20%;position: absolute;bottom: 0;-webkit-transition:all 0.5s ease-in-out;transition:all 0.5s ease-in-out;}
+    .act_status_head_animate{animation:changewidth 0.5s linear forwards;-webkit-animation:changewidth 0.5s linear forwards }
+    .act_status .p6{color: #000000;overflow : hidden;  text-overflow: ellipsis;  display: -webkit-box;  -webkit-line-clamp: 2;  -webkit-box-orient: vertical;}
+    .isactive{color: #04be02;border-bottom: 0.03rem solid #04be02;}
+
+
+
+    .main{display: none}
+
+    /*login    */
+    .loading{display:none;position: absolute;left:calc(50% - 1rem);top:calc(50% - 1rem);width:2rem;height:2rem;z-index: 11;border-radius: 0.06rem;background-image: url(image/waiting3.gif);-webkit-background-size: 1.24rem 1.24rem;background-size: 1.24rem 1.24rem;background-position: center center;background-repeat: no-repeat;background-color: rgba(0,0,0,0.5);}
+
+
+    /*二维码弹框*/
+    .code{width:7.5rem;height: 100%;background-color: rgba(0,0,0,0.5);display: none;position: absolute;  z-index: 10;}
+    .code_one{margin: 0 auto; position: absolute;top: calc(50% - 3.25rem); left: calc(50% - 2.5rem);;width: 5rem;height: 6.5rem;background-color: #ffffff;text-align: center;animation:changescale 0.5s linear forwards;-webkit-animation:changescale 0.5s linear forwards}
+    .code .code_content{width:5rem;height:5rem;}
+    /*.code_two{animation:changescale 0.5s linear forwards;-webkit-animation:changescale 0.5s linear forwards}*/
+    .code .code_content img{width: 100%;height: 100%;display: block}
+    .code span{display: block;}
+    .code .p1{font-size: 0.24rem;color: #a94442;margin-top: 0.4rem;}
+    .code .p2{font-size: 0.24rem;color: #a94442;margin: 0 0.5rem;}
+    .code_icon{position:absolute;top:-3%;right: 1%;z-index: 20;font-size: 0.50rem}
+    .code_content .code_icon img{width: 1rem;height: 1rem;-webkit-transform: rotate(45deg);transform: rotate(45deg)}
+    @-webkit-keyframes changewidth {
+        0% {
+            width: 25%;
+        }
+        100% {
+            width: 20%;
+        }
+    }
+
+    @keyframes changewidth {
+        0% {
+            width: 25%;
+        }
+        100% {
+            width: 20%;
+        }
+    }
+
+    @-webkit-keyframes changescale {
+        0% {
+            -webkit-transform: scale(1.5);
+            transform: scale(1.5);
+
+        }
+        100% {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    @keyframes changescale {
+        0% {
+            -webkit-transform: scale(1.3);
+            transform: scale(1.3);
+        }
+        100% {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+
+    /*滚动条*/
+    #scroller {
+        position: absolute;
+        z-index: 1;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        width: 100%;
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-text-size-adjust: none;
+        -moz-text-size-adjust: none;
+        -ms-text-size-adjust: none;
+        -o-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+</style>
+<body>
+    <!--login-->
+    <div class="loading" ></div>
+    <!--弹框二维码-->
+    <div class="code">
+            <div class="code_one">
+                <div class="code_content">
+                    <!--<span class="code_icon" @click="_deletcode()"><img src="images/updata.png" alt="" ></span>-->
+                    <span class="code_icon" @click="_deletcode()">×</span>
+                    <p class="p1">长按二维码，保存图片</p>
+                    <img src="{{code_img}}" alt="">
+                    <p class="p2">亲，可将二维码分享至朋友圈，进行传播哦</p>
+                </div>
+            </div>
+    </div>
+
+    <div class="main">
+        <!--顶部个人信息-->
+        <div id="scroller">
+            <div class="index_logo clearfix">
+                <div class="index_logo_info" style="background: url(images/myact_logo.png) no-repeat left/cover"></div>
+                <div class="index_logo_content clearfix">
+                    <p class="p1"><strong>{{base.adminmsg.company_name}}</strong></p>
+                    <p class="p2">{{time}}</p>
+                    <p class="p3">{{end_time}}到期</p>
+                    <a href="http://activity.echao.com/bargain/top_up.html" class="btn btn-sm btn-danger">续费</a>
+                </div>
+            </div>
+            <!--制作新的活动-->
+            <div class="new_act clearfix" @click="_act_href">
+                <span><img src="images/myact_01.png" alt=""></span>
+                <div  class="new_act_content">
+                    <p class="p4">制作新的活动</p>
+                    <p class="p5">更多新模板等你使用哦！</p>
+                    <a href="####"><img src="images/admin_icon_17.png" alt=""></a>
+                </div>
+            </div>
+            <!--活动状态-->
+            <div class="act_status clearfix act_line">
+                <ul class="act_status_head" >
+                    <!--<li v-for="b in stauss" @click="_ischosses($index)" :class="b.onoff ? 'isactive' : ''" :id="b.type">{{b.a}}</li>-->
+                   <!-- <li>b.a</li>-->
+                    <li><a href="####" data-toggle="tab" @click="_update_status(base.adminmsg.id,4,0)" >全部</a></li>
+                    <li><a  href="####" data-toggle="tab" @click="_update_status(base.adminmsg.id,0,1)">未开始</a></li>
+                    <li><a  href="####" data-toggle="tab" @click="_update_status(base.adminmsg.id,1,2)">进行中</a></li>
+                    <li><a  href="####" data-toggle="tab" @click="_update_status(base.adminmsg.id,2,3)">已结束</a></li>
+                    <li><a  href="####" data-toggle="tab" @click="_update_status(base.adminmsg.id,3,4)">已下架</a></li>
+                </ul>
+                <div id="act_status_head_buttom" class="act_status_head_buttom" style="transform: translate3d({{status_line}},0,0);-webkit-transform:translate3d({{status_line}},0,0); "></div>
+            </div>
+
+            <ul class=" act_status act_status_content clearfix tab-pane fade in active" id="all" v-for="item in base.bargain_data" >
+                <div class="act_status_thumbnail clearfix"  style="background: url({{item.image_logo}}) no-repeat center/cover"></div>
+                <div class="act_status_abstract clearfix" @click="_get_code_link(item.id,item.userid,item.status,item.template)">
+                    <p class="p6"><strong>{{item.title}}</strong></p>
+                    <p class="p7"><span>{{item.user_ck || 0}}查看</span><span>{{item.user_fx || 0}}分享</span><span>{{item.user_cj || 0}}报名</span></p>
+                    <p class="p8">{{item.start_time}}至{{item.end_time}}</p>
+                </div>
+                <ul>
+                    <li>
+                        <a href="http://activity.echao.com/bargain/application.html?adminid={{item.id}}">
+                            <span><img src="images/myact_icon_01.png" alt=""></span>
+                            <p>报名表</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a @click="_get_edit(item.id)" >
+                            <span><img src="images/myact_icon_02.png" alt=""></span>
+                            <p>编辑</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a  @click="_get_code(item.id,item.userid)">
+                            <span><img src="images/myact_icon_03.png" alt=""></span>
+                            <p>二维码</p>
+                        </a>
+                    </li>
+                    <li>
+                        <span v-if="item.status==3" @click="_bargain_status(item.id,1,$index)">
+                        <img src="images/myact_icon_04.png" alt="">
+                        <p>已下架</p>
+                        </span>
+                        <span v-else @click="_bargain_status(item.id,3,$index)">
+                        <img src="images/myact_icon_04.png" alt="">
+                        <p>下架</p>
+                        </span>
+                    </li>
+                </ul>
+            </ul>
+            
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="js/vue-lazyload.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        var myScroll;
+        function loaded() {
+            setTimeout(function(){
+                myScroll = new IScroll('.main', {
+                    preventDefault:false,
+                    scrollbars: false,
+                    mouseWheel: true,
+                    interactiveScrollbars: true,
+                    checkDOMChanges: true,
+                    fadeScrollbars: true
+                });
+            },100)
+        }
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        window.addEventListener('load', loaded, false);
+        (function () {
+            var main = new Vue({
+                "el": "body",
+                "data": {
+                    "t_time":"",
+                    "code_img":"",
+                    "status_line":0,
+                    "time":{"d":'',"h":''},
+                    "end_time":"",
+                    "loadings":false,
+                    "base":{
+                        "tel":"",
+                        "password":"",
+                        "bargain_data":"",
+                        "bargain_count":"",
+                        "adminmsg":
+                          {"end_time":''}
+                        ,
+                    },
+                    "top": {
+                        "onoff": false
+                    },
+                    "stauss": [
+                        {'a': '全部','onoff':true,'type':"id1"},
+                        {'a': '未开始','onoff':false,'type':"id2"},
+                        {'a': '进行中','onoff':false,'type':"id3"},
+                        {'a': '已结束','onoff':false,'type':"id4"},
+                        {'a': '已下架','onoff':false,'type':"id5"}
+                    ]
+                },
+                "watch": {},
+                "methods": {
+                    _act_href:function () {
+                        window.location.href="http://activity.echao.com/bargain/new_activitie.html";
+                    },
+                    _deletcode:function () {
+                        var _this = this;
+                        $(".code").hide();
+                    },
+                    _ischosses: function (flag) {
+                        var _this = this;
+                        for(var i = 0;i<this.stauss.length;i++){
+                            if(flag == i){
+                                for(var y = 0;y<this.stauss.length;y++){
+                                    this.stauss[y].onoff = false;
+                                }
+                                this.stauss[i].onoff = !this.stauss[i].onoff;
+                               // this.stauss[i].type =
+                            }
+                        }
+                    },
+                    _Getime:function () {
+                        var _this = this;
+                        if(_this.base.adminmsg.end_time) {
+                            var arr = _this.base.adminmsg.end_time.split('/');
+                           var str = arr[0] + '年' + arr[1] + '月' + arr[2];
+                            lastTime = str.split(' ')[0]+"日 "+str.split(' ')[1];
+                            _this.end_time=lastTime.split(':')[0]+"时"+lastTime.split(':')[1]+"分"+lastTime.split(':')[2]+"秒";
+                            //var EndTime = new Date(lastTime);
+                            var EndTime = new Date(_this.base.adminmsg.end_time);
+                            var NowTime = new Date();
+                            _this.t_time = EndTime.getTime() - NowTime.getTime();
+                            if( _this.t_time < 0 ){
+                                _this.time = "你的账户已经到期,请及时续费！";
+                              /*  setTimeout(function () {
+                                    if(confirm("请前往续费")){
+                                        window.location.href = "http://activity.echao.com/bargain/top_up.html"
+                                    }else{
+                                        window.location.href = "http://activity.echao.com/bargain/top_up.html"
+                                    }
+                                },500)*/
+
+                            }else{
+                                var d = Math.floor(_this.t_time / 1000 / 60 / 60 / 24);
+                                var h = Math.floor(_this.t_time / 1000 / 60 / 60 % 24);
+                                _this.time = "还有"+d+"天"+h+"小时到期";
+                            }
+                        }
+                    },
+                    showtime:function () {
+                        var _this = this;
+                        setInterval(_this._Getime,1000);
+                    },
+                    _update_status:function (id,status,type) { // 根据状态查找出相应的活动
+                        var _this = this;
+                        if( document.querySelector('#act_status_head_buttom') ){
+                            document.querySelector('.act_status_head_buttom').addEventListener(
+                                'animationend',
+                                function(){
+                                    if( $('.act_status_head_buttom').hasClass('act_status_head_animate') ){
+                                        $('.act_status_head_buttom').removeClass('act_status_head_animate')
+                                    }
+                                },false)
+                        }
+                        $(".act_status_head_buttom").addClass("act_status_head_animate");
+                        this.status_line = type*100 + "%";
+                        $(".loading").show();
+                       $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/adminmsg",
+                        data:{"adminid":id,"status":status},
+                        dataType: "json",
+                           success: function (data) {
+                               if (data) {
+                                   _this.base.bargain_data = data.bargain;
+                                   $(".loading").hide();
+                                   setTimeout(function () {
+                                       myScroll.refresh();
+                                   },100)
+                               }
+                           },
+                           error: function () {
+                               setTimeout(function () {
+                                   myScroll.refresh();
+                               },100)
+                               $(".loading").hide();
+
+                           }
+                       })
+                    },
+                     _bargain_status:function (id,status,index) { // 把活动下架
+                        var _this = this;
+                        console.log( id,status,index );
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/bargain_update_status",
+                            data:{"id":id,"status":status},
+                            dataType: "json",
+                            success: function (data) {
+                                if (data) {
+                                    _this.base.bargain_data[index].status = status;
+                                    }
+                                },
+                                error:function () {
+                                }
+                        })                       
+                    },
+                     _get_code:function (id,userid) { // 点击显示二维码
+                        var _this = this;
+                         var url = encodeURIComponent("http://weixin.echao.com/web_activity/bargain/index.html?userid="+userid+"&actid="+id );
+                         _this.code_img = "http://api.echao.com/qrcode/?value="+url;
+                         $(".code").show();
+                     },
+                     _get_code_link:function (id,userid,status,template) { // 点击显示活动
+                         if(status == '3'){
+                             alert("该活动已下架，不能查看");
+                             return false;
+                         }else{
+                             window.location.href = "http://weixin.echao.com/web_activity/bargain/"+template+".html?userid="+userid+"&actid="+id;
+                         }
+                     },
+                     _get_edit:function (id) { // 点击显示二维码
+                        window.location.href = "./edit.html";
+                        localStorage.setItem('bargainid',id );
+                     },
+                },
+                "ready": function () {
+                    var _this = this;
+                    var adminid = localStorage.getItem('adminid');
+                    if( !adminid ){
+                        window.location.href="./login.html";
+                    }
+                    console.log( adminid );
+                    $(".loading").show();
+                    // 获取管理员的详细信息
+                     $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/adminmsg",
+                        data:{"adminid":adminid,"status":"4"},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                _this.base.adminmsg=data.admin;
+                                _this.base.bargain_data=data.bargain;
+                                _this._Getime();
+                                _this.showtime();
+                                console.log(111444,data);
+                                console.log(6666666,_this.base.bargain_data);
+                                $(".loading").hide();
+                                $(".main").show();
+                                setTimeout(function () {
+                                    myScroll.refresh();
+                                },100)
+                            }else{
+                                $(".loading").hide();
+                                myScroll.refresh();
+                            }
+                        },
+                        error:function () {
+                            $(".loading").hide();
+                            myScroll.refresh();
+                        }
+                    })
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>

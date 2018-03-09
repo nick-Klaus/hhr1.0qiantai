@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=0.39, user-scalable=yes" /> -->
+    <title>质保单</title>
+</head>
+<style>
+    html,body{ padding: 0; margin: 0; height: 100%; }
+    .table-panel{ display: table; width: 100%; height: 100%; vertical-align: middle; }
+    .table-panel .table-cell{ display: table-cell; vertical-align: middle; }
+    body,div,p,ul,img{margin:0;padding:0;list-style:none;}
+    body{background:#F2EFDC;color:#423F2E;word-wrap:break-word;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+
+    .warranty_box{position:relative;width:1024px;height:1492px; margin: 0 auto;}
+    .warranty_box > .image{ position: absolute; width: 100%; height: 100%; z-index: -1; }
+    .warranty_top>p{position:absolute;top:85px;left:80px;width:238px;height:124px;overflow: hidden;}
+    .warranty_top>p.images{ background-repeat: no-repeat; background-position: 50%; background-size: contain; }
+    .warranty_top>p>img{margin:auto; max-width: 100%; max-height: 100%; width: 0; height: 0; opacity: 0; }
+    .warranty_top>ul{position:absolute;top:88px;right:80px;font-size:16px;line-height:31px; text-align: left; width: 128px;}
+
+    .warranty_customer{position:absolute;top:265px;left:165px;font-size:16px;}
+    .warranty_customer>li{position:absolute;top:0;left:0;width:200px;}
+    .warranty_customer>li:nth-child(2){top:0;left:300px;}
+    .warranty_customer>li:last-child{left:646px;}
+
+    .warranty_goods{position:absolute;top:395px;left:80px;font-size:16px;}
+    .warranty_goods>li{position:absolute;top:0;left:0;width:140px;}
+    .warranty_goods>li:nth-child(2){left:200px;}
+    .warranty_goods>li:nth-child(3){left:465px;}
+    .warranty_goods>li:nth-child(4){left:605px;}
+    .warranty_goods>li:nth-child(5){left:750px;}
+
+    .warranty_imgs{position:absolute;top:485px;left:82px;font-size:16px;}
+    .warranty_goodsImg{width:415px;height:220px;overflow: hidden; text-align: center; background-repeat: no-repeat; background-position: 50%; background-size: contain;}
+    .warranty_imgs>ul{position:absolute;top:253px;left:165px;}
+    .warranty_imgs>ul>li{position:absolute;top:0;left:0;width:200px;}
+    .warranty_imgs>ul>li:last-child{left:507px;}
+    .warranty_seal{position:absolute;top:137px;left:635px;width:181px;height:181px; background-repeat: no-repeat; background-position: 50%; background-size: contain; }
+
+    .warranty_remark{position:absolute;top:496px;right:80px;font-size:16px;width:425px;height:215px;overflow: hidden; text-indent: 3.5em; line-height: 28px; overflow: hidden;}
+
+    .warranty_agreement{position:absolute;top:860px;left:80px;width:862px;height:350px;font-size:14px;line-height:23px;color:#423F2E;}
+    .warranty_autograph{position:absolute;bottom:175px; right: 50px; min-width: 200px; font-size: 26px;}
+
+    .warranty_foot{position:absolute;bottom:73px;left:0;width:980px;font-size:14px;}
+    .warranty_foot>li{text-align: center;width:100%;padding-top:6px;}
+</style>
+<body>
+<div class="table-panel">
+    <div class="table-cell">
+        <div class="warranty_box">
+            <img class="image" src="../addons/simp_warranty/style/bill-bg-1024.jpg">
+            <div class="warranty_top clearfix">
+                <p class="images" style=" background-image: url({$shops_inc_logo})"><img src="{$shops_inc_logo}"></p>
+                <ul>
+                    <li>{$policy_order_no}</li>
+                    <li>{$policy_coded}</li>
+                    <li>{$policy_certificate_no}</li>
+                    <li>{$policy_selling_time}</li>
+                </ul>
+            </div>
+            <ul class="warranty_customer">
+                <li>{$policy_real_name}</li>
+                <li>{$policy_mobile}</li>
+                <li>{$policy_autograph}</li>
+            </ul>
+            <ul class="warranty_goods">
+                <li>{$policy_gd_no}</li>
+                <li>{$policy_standard}</li>
+                <li>{$policy_weight}</li>
+                <li>{$policy_original_price}</li>
+                <li>{$policy_amount}</li>
+            </ul>
+            <div class="warranty_imgs">
+                <div class="warranty_goodsImg" style=" background-image: url({$policy_gd_image})"></div>
+                <ul>
+                    <li>{$policy_amount_capital}</li>
+                    <li>¥ {$policy_amount}</li>
+                </ul>
+                <div class="warranty_seal" style=" background-image: url({$shops_inc_cachet})"></div>
+            </div>
+            <div class="warranty_remark">{$policy_remark}</div>
+            <div class="warranty_agreement">{$shops_agreement}</div>
+            <div class="warranty_autograph">{$policy_autograph}</div>
+            <ul class="warranty_foot">
+                <li>{$shops_name}</li>
+                <li>{$shops_address}</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

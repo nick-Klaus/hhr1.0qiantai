@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="must-revalidate">
+    <script>
+        setRem();
+        window.addEventListener("orientationchange", setRem, false);
+        window.addEventListener("resize", setRem, false);
+        function setRem(){
+            var html = document.getElementsByTagName('html')[0];
+
+            var pageWidth = html.getBoundingClientRect().width;
+
+            pageWidth = pageWidth > 750 ? 750 : pageWidth;
+
+            html.style.fontSize = pageWidth / 7.5 + "px";
+
+        }
+    </script>
+    <title></title>
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+</head>
+
+<style>
+    /*初始化*/
+    *{font-size:15px;box-sizing: border-box;}
+    article,aside,audio,body,dd,div,dl,dt,footer,form,h1,h2,h3,h4,h5,h6,header,hr,iframe,input,label,menu,nav,ol,p,section,select,td,textarea,th,time,ul,video,span,img{margin:0;padding:0;}
+    article,aside,audio,canvas,footer,header,nav,section,video{display:block}
+    input::-webkit-search-cancel-button{display:none;}
+    form{display:inline}
+    input,button,select,textarea{font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;}
+    html{width:100%;height:100%;overflow: hidden;}
+    body{color:#141414;word-wrap:break-all;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;width:100%;height:100%;background:#eeeeee;-webkit-tap-highlight-color:rgba(93,156,236,0.5);}
+    textarea{resize:none;-webkit-appearance:none;overflow: hidden;}
+
+    iframe,img{border:0;}
+    ol,ul{list-style:none;}
+    h1,h2,h3,h4,h5,h6{color:#141414;font-weight:400}
+    input,label,select,textarea{outline:0;-webkit-user-modify:read-write-plaintext-only;-webkit-tap-highlight-color:transparent;}
+    button{-webkit-appearance:none;outline:0;}
+    label{-webkit-user-modify:read-only}
+    input{border:none;background:0 0;-webkit-appearance:none;}
+    input[type=search],input[type=text]{padding-top:0.1rem!important;padding-bottom:0.1rem!important;}
+    a{color:#141414;text-decoration:none;}
+    select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit-box-shadow:none;box-shadow:none;-webkit-appearance:none}
+
+    .clearfix:after{clear:both;content:"";display: block;}
+    .main{width:100%;height:100%;background:#f4f4f4;padding-bottom:0.2rem;overflow: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;}
+
+    /*顶部图片*/
+    .index_top{width: 7.45rem;height:2rem;margin: 0.05rem auto 0 auto;overflow: auto}
+    .index_top .top_content{margin:-0.4rem auto 0 auto;height: 1.2rem;width: 1.2rem;padding: 0.5rem 0 0 0}
+    .index_top .top_tel{width:0.2rem;background: url("images/telnumber.png") no-repeat left;text-align: center;margin: 0.1rem 0 0 2.7rem}
+    .index_top .top_tel span{padding-left: 0.2rem;color: #ffffff}
+    .index_top p{margin: 0.2rem 0 0 0.2rem;color: #ffffff;padding-left:0.15rem}
+    .index_top p span{margin-right: 0.1rem}
+
+    /*title*/
+    .index_title{background-color: #ffffff;padding-bottom:0.2rem}
+    .index_title span{color: #ff0000;}
+    .index_title a{float: right;margin-top: -0.7rem;margin-right: 0.6rem}
+    .index_title_two{font-size: 0.18rem;color: #ef835c}
+    .index_one{margin: 0.3rem 0 0 1.2rem;width: auto}
+
+    /*图标*/
+    .index_icon{padding: 0.3rem 0;background-color: #ffffff;margin-top: 0.2rem}
+    .index_icon ul{display: flex;}
+    .index_icon ul li{float: left;flex: 1;text-align: center}
+
+    /*新的活动*/
+    .index_act{background-color: #ffffff;margin-top: 0.2rem;padding: 0.2rem 0 0.2rem 0.3rem;}
+    .index_act span{overflow: hidden;display: inline-block;float: left}
+    .index_act_content{float: left;margin-left: 0.2rem;}
+    .index_act a{float: right;margin: 0.2rem 0.4rem 0 0;}
+    .index_act .index_act_content_two{color: #ff3300;font-size: 0.2rem}
+
+    /*我的活动*/
+    .index_act_content_tre a{text-decoration: none}
+
+    /*进行中的活动*/
+    .index_acting{background-color: #ffffff;border-top: solid 0.01rem #ded9d9}
+    .index_acting div{padding: 0.1rem  0.1rem 0.1rem 0.1rem}
+    .index_acting .index_acting_span_two{display: inline-block;float: right}
+    .index_acting_ul:nth-child(odd){ background-color: #F0F0F0}
+    .index_acting ul li p{padding-left: 0.2rem;color: #000000}
+    .index_acting table{width: 95%;margin:0 auto 0.2rem auto}
+
+    /*login*/
+    .loading{position: absolute;left:calc(50% - 1rem);top:calc(50% - 1rem);width:2rem;height:2rem;z-index: 11;border-radius: 0.06rem;background-image: url(image/waiting3.gif);-webkit-background-size: 1.24rem 1.24rem;background-size: 1.24rem 1.24rem;background-position: center center;background-repeat: no-repeat;background-color: rgba(0,0,0,0.5);}
+
+    .main{display: none}
+
+    #scroller {
+        position: absolute;
+        z-index: 1;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        width: 100%;
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-text-size-adjust: none;
+        -moz-text-size-adjust: none;
+        -ms-text-size-adjust: none;
+        -o-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+</style>
+<body>
+    <!--login-->
+    <div class="loading" ></div>
+    <!--main-->
+    <div class="main">
+        <div id="scroller">
+        <!-- 顶部图片 -->
+            <div class="index_top" style="background: url(images/banner_top_03.png) no-repeat center center / cover;">
+                <p><span @click="_Getout()"><img src="images/back_03.png" alt=""></span>退出</p>
+                <div class="top_content"  style="background: url(images/headtitle.png) no-repeat center center / cover;" ></div>
+                <div class="top_tel"><span>{{base.adminmsg.phone}}</span></div>
+            </div>
+            <!--title-->
+            <div class="index_title clearfix">
+                <div class="index_one">
+                    <p>{{time}}</p>
+                    <p class="index_title_two">{{end_time}}</p>
+                </div>
+                <a href="http://activity.echao.com/bargain/top_up.html?adminid={{base.adminmsg.id}}" class="btn btn-danger btn-sm">续费</a>
+            </div>
+            <!--图标-->
+            <div class="index_icon clearfix">
+                <ul>
+                    <li>
+                        <a href=" Javascript: void(0)">
+                            <span><img src="images/admin_icon_03.png" alt=""></span>
+                            <p>服务费</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=" Javascript: void(0)">
+                            <span><img src="images/admin_icon_10.png" alt=""></span>
+                            <p>案例库</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Javascript: void(0)">
+                            <span><img src="images/admin_icon_05.png" alt=""></span>
+                            <p>常见问题</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="Javascript: void(0)">
+                            <span><img src="images/admin_icon_07.png" alt=""></span>
+                            <p>活动教程</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--新的活动-->
+            <div class="index_act clearfix"  @click="_get_modul()">
+                <span><img src="images/act_01.png" alt=""></span>
+                <div class="index_act_content">
+                    <p>制作新的活动</p>
+                    <p class="index_act_content_two">更多新模板等你使用哦</p>
+                </div>
+                <a  ><img src="images/admin_icon_17.png" alt=""></a>
+
+            </div>
+            <!--我的活动-->
+            <div class="index_act clearfix" @click="_Getmyact()">
+                <span><img src="images/act_02.png" alt=""></span>
+                <div class="index_act_content">
+                    <p class="index_act_content_tre"><a href="Javascript: void(0)">我的活动-总共{{base.bargain_count}}个</a> </p>
+                </div>
+                <a href="Javascript: void(0)"><img src="images/admin_icon_17.png" alt=""></a>
+            </div>
+            <!--进行中的活动-->
+            <div class="index_acting clearfix">
+                <div>
+                    <span>进行中的活动-{{base.bargain_data.length}}个</span>
+                    <!-- <span class="index_acting_span_two"><img src="images/admin_icon_21.png" alt=""></span> -->
+                </div>
+                <ul  v-for="item in base.bargain_data" class="index_acting_ul">
+                    <li>
+                        <p><strong>{{$index+1}}.{{item.title}}</strong></p>
+                        <table class="table table-bordered">
+                           <tbody>
+                                <tr >
+                                    <td class="index_acting_a" colspan='3'>
+                                        砍至底价的：{{item.user_floor || "0"}}人
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>查看：{{item.user_ck}}</td>
+                                    <td>分享：{{item.user_fx}}</td>
+                                    <td>报名：{{item.user_cj}}</td>
+                                </tr>
+                           </tbody>
+                        </table>
+                    </li>
+                  
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="js/vue-lazyload.js"></script>
+    <script>
+        var myScroll;
+        function loaded() {
+            setTimeout(function(){
+                myScroll = new IScroll('.main', {
+                    preventDefault:false,
+                    scrollbars: false,
+                    mouseWheel: true,
+                    interactiveScrollbars: true,
+                    checkDOMChanges: true,
+//                    fadeScrollbars: true,
+
+                });
+            },100)
+        }
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        window.addEventListener('load', loaded, false);
+        if( document.querySelector('.prompt') ){
+            document.querySelector('.prompt').addEventListener(
+                    'webkitTransitionEnd',
+                    function(){
+                        if( !$('.prompt').hasClass('show') ){
+                            $('.prompt').hide();
+                        }
+                    },false)
+        }
+        (function () {
+            var main = new Vue({
+                "el": "body",
+                "data": {
+                    "time":{"d":'',"h":''},
+                    "end_time":"",
+                    "loadings":false,
+                    "base":{
+                        "tel":"",
+                        "password":"",
+                        "bargain_data":"",
+                        "bargain_count":"",
+                        "adminmsg":
+                          {"end_time":''}
+                        ,
+                    },
+                    "top": {
+                        "onoff": false,
+                        "text":""
+                    },
+                    "stauss": [
+                        {'a': '全部','onoff':true},
+                        {'a': '未开始','onoff':false},
+                        {'a': '进行中','onoff':false},
+                        {'a': '已结束','onoff':false},
+                        {'a': '已下架','onoff':false}
+                    ]
+                },
+                "watch": {
+
+                },
+                "methods": {
+                    _get_modul:function () {
+                        var _this = this;
+                        window.location.href="./new_activitie.html";
+                    },
+                    _Getout:function () {
+                        window.location.href="./login.html";
+                        localStorage.removeItem('adminid');
+                    },
+                    _Getmyact:function () {
+                        var _this = this;
+                        window.location.href="./myact.html";
+                    },
+                    _Getime:function () {
+                        var _this = this;
+                        if(_this.base.adminmsg.end_time) {
+                            var arr = _this.base.adminmsg.end_time.split('/');
+                            var str = arr[0] + '年' + arr[1] + '月' + arr[2];
+                            lastTime = str.split(' ')[0]+"日 "+str.split(' ')[1];
+                            _this.end_time=lastTime.split(':')[0]+"时"+lastTime.split(':')[1]+"分"+lastTime.split(':')[2]+"秒到期";
+                            //var EndTime = new Date(lastTime);
+                            var EndTime = new Date(_this.base.adminmsg.end_time);
+                            var NowTime = new Date();
+                            var t = EndTime.getTime() - NowTime.getTime();
+                            if( t < 0 ){
+                                _this.time = "你的账户已经到期,请及时续费！";
+                               /* setTimeout(function () {
+                                    if(confirm("请前往续费")){
+                                        window.location.href = "http://activity.echao.com/bargain/top_up.html"
+                                    }else{
+                                        window.location.href = "http://activity.echao.com/bargain/top_up.html"
+                                    }
+                                },500)*/
+                            }else{
+                                var d = Math.floor(t / 1000 / 60 / 60 / 24);
+                                var h = Math.floor(t / 1000 / 60 / 60 % 24);
+                                _this.time = "还有"+d+"天"+h+"小时到期";
+                            }
+                        }
+                    },
+                    showtime:function () {
+                        var _this = this;
+                        setInterval(_this._Getime,1000);
+                    },
+                },
+                "ready": function () {
+                    var _this = this;
+                    $(".main").hide();
+                    var adminid = localStorage.getItem('adminid');
+                    if( !adminid ){
+                        window.location.href="./login.html";
+                    }
+                    $(".loading").show();
+                    // 获取管理员的详细信息
+                     $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/adminmsg",
+                        data:{"adminid":adminid,"status":"1"},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                _this.base.adminmsg=data.admin;
+                                _this.base.bargain_data=data.bargain;
+                                _this.base.bargain_count=data.count;
+                                _this._Getime();
+                                _this.showtime();
+                                $(".loading").hide();
+                                $(".main").show();
+                                setTimeout(function () {
+                                    myScroll.refresh();
+                                },100)
+                            }else{
+                                $(".loading").hide();
+                                myScroll.refresh();
+                            }
+                        },
+                        error:function () {
+                            $(".loading").hide();
+                            myScroll.refresh();
+                        }
+                    })
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

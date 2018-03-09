@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+<meta http-equiv="Cache-Control" content="must-revalidate">
+<script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+<title>WeChat Auth</title>
+</head>
+<body>
+</body>
+<script>
+(function(){
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    var param = window.location.href.split('?')[1].split('&') || [];
+    var query = {};
+    for( var index in param ){
+        var params = param[index].split('=') || [];
+        if( params[0] ){
+            query[ params[0] ] = params[1] || '';
+        }
+    }
+    if( query.state && query.state.indexOf('ShareSpokesman') === 0 ){
+        sessionStorage.setItem('token', query.state.substr(14) );
+        window.location.href = 'http://ssm.echao.com:8081/fans/auth?code='+ query.code +'&state='+ query.state;
+    }
+})();
+</script>
+</html>

@@ -1,0 +1,1880 @@
+<!--统计页面-->
+<template id="count_page">
+    <div class="wrapper">
+        <div id="scroller">
+            <div class="count_progress">
+                <div class="count_progress_one">
+                    <div class="count_progress_img">
+                        <dd></dd>
+                        <dt class="one" v-if=" progress.width > 19 "></dt>
+                        <dt class="two" v-if=" progress.width > 39 "></dt>
+                        <dt class="three" v-if=" progress.width > 59 "></dt>
+                        <dt class="four" v-if=" progress.width > 79 "></dt>
+                        <dt class="five" v-if=" progress.width > 99 "></dt>
+                    </div>
+                </div>
+                <ul class="count_progress_number clearfix">
+                    <li class="one">0</li>
+                    <li class="two">20</li>
+                    <li class="three">40</li>
+                    <li class="four">60</li>
+                    <li class="five">80</li>
+                    <li class="six">100</li>
+                </ul>
+                <div class="count_progress_btn clearfix">
+                    <div class="count_progress_btn_left">您今天的任务已完成{{progress.num}}%</div>
+                    <button onclick="routerHref('dailyTask')">查看详情</button>
+                </div>
+            </div>
+            <div class="count_main">
+                <div class="count_main_head">邀请人数统计</div>
+                <div class="count_info clearfix">
+                    <div class="count_info_text">
+                        <dd>{{total.database.invitation_today || 0}}</dd>
+                        <dt>今日邀请</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <dd>{{total.database.invitation_total || 0}}</dd>
+                        <dt>累计邀请</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <button onclick="routerHref('invite')">立即邀请</button>
+                    </div>
+                </div>
+            </div>
+            <div class="count_main">
+                <div class="count_main_head">分享次数统计</div>
+                <div class="count_info clearfix">
+                    <div class="count_info_text">
+                        <dd>{{total.database.share_new || 0}}</dd>
+                        <dt>今日分享</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <dd>{{total.database.share_all || 0}}</dd>
+                        <dt>累计分享</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <button onclick="routerHref('promotion')">立即分享</button>
+                    </div>
+                </div>
+            </div>
+            <div class="count_main">
+                <div class="count_main_head">转发次数统计</div>
+                <div class="count_info clearfix">
+                    <div class="count_info_text">
+                        <dd>{{total.database.forward_new || 0}}</dd>
+                        <dt>今日转发</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <dd>{{total.database.forward_all || 0}}</dd>
+                        <dt>累计转发</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <button onclick="routerHref('promotion')">立即转发</button>
+                    </div>
+                </div>
+            </div>
+            <div class="count_main">
+                <div class="count_main_head">代言人收益统计</div>
+                <div class="count_info clearfix">
+                    <div class="count_info_text">
+                        <dd>{{total.database.profit_new | eachTwo}}</dd>
+                        <dt>今日收益</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <dd>{{total.database.profit_all | eachTwo}}</dd>
+                        <dt>累计收益</dt>
+                    </div>
+                    <div class="count_info_text">
+                        <button onclick="routerHref('order')">立即查看</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="count_block"></div>
+        </div>
+
+        <div class="count_head">
+            统计
+            <dd onclick="routerHref('signIn')">签到</dd>
+        </div>
+        <ul class="count_foot clearfix">
+            <li class="active">统计</li>
+            <li onclick="routerHref('promotion')">活动</li>
+            <li onclick="routerHref('dailyTask')">任务</li>
+            <li onclick="routerHref('personal')">个人</li>
+        </ul>
+    </div>
+</template>
+
+<!-- 签到 -->
+<template id="signIn_page">
+    <div class="wrapper signIn_bg">
+        <div id="scroller" class="signIn_bg">
+            <div class="signIn_top flexBox">
+                <div class="signIn_top_main" @click="_signIn()">
+                    <dd>{{base.text}}</dd>
+                    <dt>连续签到{{base.taskcount}}天</dt>
+                </div>
+            </div>
+            <div class="signIn_bottom">
+                <div class="calendar_head">
+                    <dd @click="_removeMonth()"></dd>
+                    {{calendar.nowYear}}年{{calendar.nowMonth}}月
+                    <dt @click="_addMonth()"></dt>
+                </div>
+                <div class="calendar_main">
+                    <ul class="calendar_week clearfix">
+                        <li v-for="d in calendar.database.weekdays" v-html="d"></li>
+                    </ul>
+                    <ul class="calendar_date clearfix" v-for="d in calendar.database.data" v-show=" d.length ">
+                        <li v-for="s in d" :class=" s.month ? '' : 'lastMonth' ">
+                            <dd :class=" s.date | eachSignIn ">
+                                <span :class=" s.nowDay ? 'today' : '' ">{{s.day}}</span>
+                            </dd>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="signIn_block"></div>
+        </div>
+
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            签到
+        </div>
+    </div>
+</template>
+
+<!--活动-->
+<template id="promotion_page">
+    <div class="wrapper" style="padding-top:1.76rem;">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="promotion_main">
+                <template v-if=" base.dataList.length ">  
+                    <div v-for="d in base.dataList">
+                        <ul class="pro_goods">
+                            <li class="pro_goods_img flexBox" @click="_goDetail(d)"><img :src=" d.image_logo "/></li>
+                            <li class="pro_goods_info">
+                                <dt @click="_goDetail(d)">{{d.activity_title | eachTitle }}</dt>
+                                <dd class="clearfix"><p>{{d.quantity}}件</p>{{d.floor_price | eachTwo}}</dd>
+                                <ul class="clearfix">
+                                    <li>分享次数&nbsp;&nbsp;{{d.user_fx}}</li>
+                                    <li>浏览次数&nbsp;&nbsp;{{d.user_ck}}</li>
+                                    <!-- <li v-if=" d.activity_type == 1 ">获得佣金&nbsp;&nbsp;0</li> -->
+                                    <li @click="_getActivity(d.activity_type,d.id)" style="float:right;"><a href="javascript:;">活动详情&gt;&gt;</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="bottom_img"></div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </div>
+            <div class="pull_loading">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--页面顶部和底部-->
+        <div class="promotion_head">
+            <div class="search_box" onclick="routerSearch(2)">
+                <label>快速搜索产品</label>
+                <i></i>
+            </div>
+            <s @click=" base.sideShow = true "></s>
+        </div>
+        <ul class="promotion_top">
+            <li :class=" title.tabs == 'a' ? 'active' : '' " @click=" title.tabs = 'a' ">全部</li>
+            <li :class=" title.tabs == 'b' ? 'active' : '' " @click=" title.tabs = 'b' ">库存</li>
+            <li :class=" title.tabs == 'c' ? 'active' : '' " @click=" title.tabs = 'c' ">价格</li>
+        </ul>
+        <ul class="menu clearfix">
+            <li onclick="backPage('count')">统计</li>
+            <li class="active">活动</li>
+            <li onclick="routerHref('dailyTask')">任务</li>
+            <li onclick="routerHref('personal')">个人</li>
+        </ul>
+        <div class="activity_block" v-if=" base.sideShow " @click=" base.sideShow = false "></div>
+        <div class="activity_side" transition="sideRight" v-if=" base.sideShow ">
+            <ul class="activity_side_main">
+                <li class="one" :class=" title.type == 66 ? 'active' : '' " @click=" title.type = 66 ">全部活动</li>
+                <li class="two" :class=" title.type == 1 ? 'active' : '' " @click=" title.type = 1 ">单品</li>
+                <li class="three" :class=" title.type == 2 ? 'active' : '' " @click=" title.type = 2 ">砍价</li>
+                <li class="four" :class=" title.type == 3 ? 'active' : '' " @click=" title.type = 3 ">众筹</li>
+                <li class="five" :class=" title.type == 4 ? 'active' : '' " @click=" title.type = 4 ">拼团</li>
+                <li class="six" :class=" title.type == 5 ? 'active' : '' " @click=" title.type = 5 ">拍卖</li>
+                <li class="seven" :class=" title.type == 6 ? 'active' : '' " @click=" title.type = 6 ">传单</li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<!--非代言人活动列表-->
+<template id="promotionOther_page">
+    <div class="wrapper" style="padding-top:1.76rem;">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="promotion_main">
+                <template v-if=" base.dataList.length ">  
+                    <div v-for="d in base.dataList">
+                        <ul class="pro_goods">
+                            <li class="pro_goods_img flexBox" @click="_goDetail(d)"><img :src=" d.image_logo "/></li>
+                            <li class="pro_goods_info">
+                                <dt @click="_goDetail(d)">{{d.activity_title | eachTitle }}</dt>
+                                <dd class="clearfix"><p>{{d.quantity}}件</p>{{d.floor_price | eachTwo}}</dd>
+                                <ul class="clearfix">
+                                    <li>分享次数&nbsp;&nbsp;{{d.user_fx}}</li>
+                                    <li>浏览次数&nbsp;&nbsp;{{d.user_ck}}</li>
+                                    <!-- <li v-if=" d.activity_type == 1 ">获得佣金&nbsp;&nbsp;0</li> -->
+                                    <!-- <li @click="_getActivity(d.activity_type,d.id)" style="float:right;"><a href="javascript:;">活动详情&gt;&gt;</a></li> -->
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="bottom_img"></div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </div>
+            <div class="pull_loading" v-if=" parentMsg.base.is_prolocutor == 1 ">{{base.text}}</div>
+            <div class="pull_loading_else" v-else>{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--页面顶部和底部-->
+        <div class="promotion_head">
+            <div class="search_box" onclick="routerSearch(2)">
+                <label>快速搜索产品</label>
+                <i></i>
+            </div>
+            <s @click=" base.sideShow = true "></s>
+        </div>
+        <ul class="promotion_top">
+            <li :class=" title.tabs == 'a' ? 'active' : '' " @click=" title.tabs = 'a' ">全部</li>
+            <li :class=" title.tabs == 'b' ? 'active' : '' " @click=" title.tabs = 'b' ">库存</li>
+            <li :class=" title.tabs == 'c' ? 'active' : '' " @click=" title.tabs = 'c' ">价格</li>
+        </ul>
+        <ul class="menu clearfix" v-if=" parentMsg.base.is_prolocutor == 1 ">
+            <li onclick="backPage('count')">统计</li>
+            <li class="active">活动</li>
+            <li onclick="routerHref('dailyTask')">任务</li>
+            <li onclick="routerHref('personal')">个人</li>
+        </ul>
+        <div class="activity_block" v-if=" base.sideShow " @click=" base.sideShow = false "></div>
+        <div class="activity_side" transition="sideRight" v-if=" base.sideShow ">
+            <ul class="activity_side_main">
+                <li class="one" :class=" title.type == 66 ? 'active' : '' " @click=" title.type = 66 ">全部活动</li>
+                <li class="two" :class=" title.type == 1 ? 'active' : '' " @click=" title.type = 1 ">单品</li>
+                <li class="three" :class=" title.type == 2 ? 'active' : '' " @click=" title.type = 2 ">砍价</li>
+                <li class="four" :class=" title.type == 3 ? 'active' : '' " @click=" title.type = 3 ">众筹</li>
+                <li class="five" :class=" title.type == 4 ? 'active' : '' " @click=" title.type = 4 ">拼团</li>
+                <li class="six" :class=" title.type == 5 ? 'active' : '' " @click=" title.type = 5 ">拍卖</li>
+                <li class="seven" :class=" title.type == 6 ? 'active' : '' " @click=" title.type = 6 ">传单</li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<!--活动详情-->
+<template id="promotion_detail_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="pro_detail_main" v-show=" base.activity_type == 1 ">
+                <div class="pro_detail_profit">
+                    <p>收益成绩</p>
+                    <ul class="clearfix">
+                        <li><span>分享次数</span>{{base.database.user_fx || 0}} 次</li>
+                        <li><span>浏览人数</span>{{base.database.user_ck || 0}} 人</li>
+                        <li><span>转发次数</span>{{base.database.user_zf || 0}} 次</li>
+                        <li><span>获得佣金</span>{{base.database.direct_profit / 100 * base.database.floor_price | eachTwo}} 元</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_goods">
+                    <p>活动商品</p>
+                    <ul class="pro_goods">
+                        <li class="pro_goods_img"><img :src=" base.product.image | eachImage "/></li>
+                        <li class="pro_goods_info">
+                            <dt>{{base.product.name}}</dt>
+                            <dd><p>{{base.product.stock}}件</p>{{base.product.money | eachTwo}}</dd>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>活动时间</p>
+                    <ul class="clearfix">
+                        <li><span>开始时间</span>{{base.database.start_time}}</li>
+                        <li><span>结束时间</span>{{base.database.end_time}}</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>分享佣金</p>
+                    <ul class="clearfix">
+                        <li><span>分享</span>¥{{base.database.share_money_time | eachTwo}}元/次</li>
+                        <li><span>转发</span>¥{{base.database.forward_money_time | eachTwo}}元/次</li>
+                        <li><span>浏览</span>¥{{base.database.browse_money_time | eachTwo}}元/次</li>
+                        <!-- <li><span>成单</span>成单金额3%/笔</li> -->
+                    </ul>
+                </div>
+            </div>
+            <div class="pro_detail_main" v-show=" base.activity_type == 2 ">
+                <div class="pro_detail_profit">
+                    <p>收益成绩</p>
+                    <ul class="clearfix">
+                        <li><span>分享次数</span>{{base.database.user_fx || 0}} 次</li>
+                        <li><span>浏览人数</span>{{base.database.user_ck || 0}} 人</li>
+                        <li><span>转发次数</span>{{base.database.user_zf || 0}} 次</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_goods">
+                    <p>活动商品</p>
+                    <ul class="pro_goods">
+                        <li class="pro_goods_img"><img :src=" base.product.image | eachImage "/></li>
+                        <li class="pro_goods_info">
+                            <dt>{{base.product.name}}</dt>
+                            <dd><p>{{base.product.stock}}件</p>{{base.product.money | eachTwo}}</dd>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>活动时间</p>
+                    <ul class="clearfix">
+                        <li><span>开始时间</span>{{base.database.start_time}}</li>
+                        <li><span>结束时间</span>{{base.database.end_time}}</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>分享佣金</p>
+                    <ul class="clearfix">
+                        <li><span>分享</span>¥{{base.database.share_money_time | eachTwo}}元/次</li>
+                        <li><span>转发</span>¥{{base.database.forward_money_time | eachTwo}}元/次</li>
+                        <li><span>浏览</span>¥{{base.database.browse_money_time | eachTwo}}元/次</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pro_detail_main" v-show=" base.activity_type == 6 ">
+                <div class="pro_detail_profit">
+                    <p>收益成绩</p>
+                    <ul class="clearfix">
+                        <li><span>分享次数</span>{{base.database.user_fx || 0}} 次</li>
+                        <li><span>浏览人数</span>{{base.database.user_ck || 0}} 人</li>
+                        <li><span>转发次数</span>{{base.database.user_zf || 0}} 次</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_goods">
+                    <p>活动商品</p>
+                    <ul class="pro_goods">
+                        <li class="pro_goods_img"><img :src=" base.product.image | eachImage "/></li>
+                        <li class="pro_goods_info">
+                            <dt>{{base.product.name}}</dt>
+                            <dd><p>{{base.product.stock}}件</p>{{base.product.money | eachTwo}}</dd>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>活动时间</p>
+                    <ul class="clearfix">
+                        <li><span>开始时间</span>{{base.database.start_time}}</li>
+                        <li><span>结束时间</span>{{base.database.end_time}}</li>
+                    </ul>
+                </div>
+                <div class="pro_detail_profit pro_detail_time">
+                    <p>分享佣金</p>
+                    <ul class="clearfix">
+                        <li><span>分享</span>¥{{base.database.share_money_time | eachTwo}}元/次</li>
+                        <li><span>转发</span>¥{{base.database.forward_money_time | eachTwo}}元/次</li>
+                        <li><span>浏览</span>¥{{base.database.browse_money_time | eachTwo}}元/次</li>
+                        <!-- <li><span>成单</span>成单金额3%/笔</li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            详情
+        </div>
+    </div>
+</template>
+
+<!--产品详情-->
+<template id="product_detail_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="product_detail_main">
+                <div class="product_detail_top">
+                    <div class="product_banner swiper-container">
+                        <div class="product_banner_img swiper-wrapper clearfix" v-if=" base.banner.length ">
+                            <div class="slide swiper-slide" v-for="d in base.banner" style="background:url({{d}}) no-repeat center center / cover;"></div>
+                        </div>
+                        <div class="swiper-pagination circle"></div>
+                    </div>
+                    <!-- <dt><img src="./img/product_detail/goods.png" alt=""/></dt> -->
+                    <dd>{{base.database.title}}</dd>
+                    <dd><span>{{base.database.product_quantity || 0}} 件</span><p>¥ {{base.database.floor_price | eachTwo}}</p></dd>
+                </div>
+                <p>{{base.database.product_introduction}}</p>
+                <div class="product_detail_pic">
+                    <div class="product_detail_pic_title">
+                        <span>产品详情</span>
+                    </div>
+                    <div class="product_detail_pic_info clearfix">
+                        <img v-for="d in base.detail" class="lazy" data-original="{{d}}" alt=""/>
+                    </div>
+                    
+                    <div class="bottom_img"></div>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="backPage('promotion')" v-if=" parentMsg.base.is_prolocutor == 1 "></dd>
+            产品详情
+        </div>
+        <div class="product_detail_btn clearfix">
+            <div class="backActivity_list" onclick="routerHref('promotionOther')">
+                <dd></dd>
+                <dt>所有活动</dt>
+            </div>
+            <button class="pay" @click="_goPayPage()">立即购买</button>
+            <button class="share" @click=" base.share = true ">快速分享</button>
+        </div>
+        <div class="share_tips" v-if=" base.share " @click=" base.share = false ">
+            <dd></dd>
+        </div>
+    </div>
+</template>
+
+<!--砍价详情-->
+<template id="bargain_page">
+    <div class="wrapper bargain_bg">
+        <!--主体内容-->
+        <div id="scroller" class="bargain_bg">
+            <!-- 顶部图片 -->
+            <div class="top_content">
+                <span><strong>{{check_list_see}}</strong>人查看</span><span><strong>{{check_list *4}}</strong>人分享</span><span><strong>{{check_list_cj * 2}}</strong>人报名</span>
+            </div>
+            <div class="index_top" style="background: url({{bargain.image_logo}}) no-repeat center center / cover;">
+            </div>
+            <!-- 价格 -->
+            <div class="index_price">
+                <div class="index_price_one clearfix">
+                    <dd><pre>{{bargain.title}}</pre></dd>
+                    <dt>{{bargain.subtitle}}<br><i><span>{{bargain.floor_price}}</span> 元</i></dt>
+                </div>
+                <div class="index_price_two time" v-if="t_time > 0" >
+                    活动<span>结束</span>倒计时:<span id="t_d">{{time.d}}天</span><span id="t_h">{{time.h}}时</span><span id="t_m">{{time.m}}分</span><span id="t_s">{{time.s}}秒</span>
+                </div>
+                <div class="index_price_two time" v-if="t_time <= 0">
+                    活动时间于 <span>{{bargain.end_time}}</span>结束！
+                </div>
+                <div class="index_price_three" v-if="mar.new_price != mar.floor_price">
+                    <span>{{bargain.replace_starttime}}</span> 到 <span>{{bargain.replace_endtime}}</span>
+                </div>
+                <div class="index_price_three" v-if="mar.new_price == mar.floor_price">
+                    <span>{{mar.username}}</span>于 <span>{{mar.bargain_time}}</span><span>成功减至底价</span>
+                </div>
+            </div>
+            <div class="index_hr clearfix" style="margin-bottom:0.1rem;"><img src="img/product_detail/new_hr.png" alt=""></div>
+            <!-- 砍价 -->
+            <div class="index_main">
+                <div class="index_main_one clearfix">
+                    <dd>{{mar.username}}  </dd>
+                    <dt>原价：<span>{{mar.original_price}}</span>元</dt>
+                </div>
+                <div class="index_main_one clearfix" style="margin-bottom:0.2rem;">
+                    <dd>现价：<span>{{mar.new_price}}</span>元</dd>
+                    <dt>底价：<span>{{mar.floor_price}}</span>元</dt>
+                </div>
+                <template v-if="t_time > 0">
+                    <template v-if="mar.new_price == mar.floor_price">
+                    <div class="index_main_two" v-if="mar.openid != base.openid && user_status != 1">
+                        <!--<button  @click = "showmodal()" >我要参加</button>-->
+                        <button @click="partstatus()">我要参加</button>
+                    </div>
+                </template>
+
+                <template v-if="mar.bargain_times == 0">
+                    <div class="index_main_two">
+                        <button>砍价次数已用完</button>
+                    </div>
+                    <div class="index_main_two" v-if=" mar.openid != base.openid && user_status == 1">
+                        <button @click="returnmodal()">返回我的活动</button>
+                    </div>
+                    <div class="index_main_two" v-if=" mar.openid != base.openid && user_status != 1">
+                        <!--<button  @click = "showmodal()" >我要参加</button>-->
+                        <button @click="partstatus()">我要参加</button>
+                    </div>
+                </template>
+                <template v-else>
+                    <template v-if="mar.new_price != mar.floor_price">
+                        <div class="index_main_two" v-if="mar.openid != base.openid && price_time.length>0">
+                            <button>您已为他砍过价</button>
+                        </div>
+                        <div class="index_main_two" v-if="mar.openid != base.openid && price_time.length==0">
+                            <button @click="showhimodal()">帮砍一刀</button>
+                        </div>
+                        <div class="index_main_two" v-if="mar.openid == base.openid && mar.bargain_type == 1">
+                            <button>您已经为自己砍过价，让朋友帮你继续砍价</button>
+                        </div>
+                        <div class="index_main_two" v-if="mar.openid == base.openid && mar.bargain_type == 2">
+                            <button @click="showhimodal(1)">为自己砍价</button>
+                        </div>
+                        <div class="index_main_two" v-if=" mar.openid != base.openid && user_status != 1">
+                            <!--<button  @click = "showmodal()" >我要参加</button>-->
+                            <button @click="partstatus()">我要参加</button>
+                        </div>
+                    </template>
+                        <div class="index_main_two" v-if=" mar.openid != base.openid && user_status == 1">
+                            <button @click="returnmodal()">返回我的活动</button>
+                        </div>
+                    </template>
+                </template>
+                <template v-else>
+                    <div class="index_main_two" v-if=" mar.openid != base.openid && user_status == 1">
+                        <button @click="returnmodal()">返回我的活动</button>
+                    </div>
+                </template>
+            </div>
+
+            <div class="index_hr clearfix" style="margin-top:0.1rem;"><img src="img/product_detail/new_hr.png" alt=""></div>
+
+            <!-- 奖品描述 -->
+            <div class="index_describe">
+                <div class="index_describe_box">
+                    <div class="index_describe_title"><div class="title">奖品描述</div></div>
+                    <div class="index_describe_num">本期奖品 <span>{{bargain.gift_quantity}}</span> 份 剩余 <span>{{bargain.new_gift_quantity}}</span> 份</div>
+                    <div class="index_rule_text">
+                      <pre>{{bargain.gift_describe_txt}}</pre>
+                    </div>
+                    <div class="index_describe_img clearfix">
+                      <img v-for="d in bargain.gift_describe"  alt="" v-lazy="d">
+                    </div>             
+                </div>
+            </div>
+
+            <div class="index_hr clearfix"><img src="img/product_detail/new_hr.png" alt=""></div>
+
+            <!-- 活动规则 -->
+            <div class="index_rule">
+                <div class="index_describe_box">
+                    <div class="index_describe_title"><div class="title">活动规则</div></div>
+                    <div class="index_rule_text">
+                        <pre>{{bargain.activity_rules}}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="index_hr clearfix"><img src="img/product_detail/new_hr.png" alt=""></div>
+
+            <!-- 领奖信息 -->
+            <div class="index_rule">
+                <div class="index_describe_box">
+                    <div class="index_describe_title"><div class="title">领奖信息</div></div>
+                    <div class="index_rule_text">
+                      <pre>{{bargain.award_information}}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="index_hr clearfix"><img src="img/product_detail/new_hr.png" alt=""></div>
+
+            <!-- 机构介绍 -->
+            <div class="index_rule">
+                <div class="index_describe_box">
+                    <div class="index_describe_title"><div class="title">品牌介绍</div></div>
+                    <div class="index_rule_text">
+                        <pre>{{bargain.company_introduction}}</pre>
+                    </div>
+                    <div class="index_describe_img clearfix">
+                        <img v-for="d in bargain.company_introduction_img"  alt=""  v-lazy="d">
+                    </div>
+                </div>
+            </div>
+
+            <div class="index_hr clearfix"><img src="img/product_detail/new_hr.png" alt=""></div>
+
+            <!-- 当前排名 -->
+            <div class="index_rule">
+              <div class="index_describe_box">
+                <div class="index_describe_title"><div class="title">当前排名</div></div>
+                    <table >
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>姓名</th>
+                                <th>目前价格</th>
+                            </tr>
+                        </thead>
+                        <tr v-if="mar.openid == base.openid">
+                            <td>我</td>
+                            <td>{{mar.username | cahngetext}}</td>
+                            <td>{{mar.new_price}}</td>
+                        </tr>
+                        <tbody v-for="b in bargain_user_all">
+                            <tr>
+                                <td>{{$index + 1}}</td>
+                                <td>{{b.username | cahngetext}}</td>
+                                <td>{{b.new_price}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+              </div>
+            </div>
+            <div class="buttom_login"><img src="img/product_detail/loading.gif" alt=""></div>
+            <div class="buttom_text">没有更多数据....</div>
+
+            <div class="bargain_block"></div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            产品详情
+        </div>
+        <div class="product_detail_btn clearfix">
+            <a href="javascript:;">快速分享</a>
+            <a href="javascript:;" onclick="routerHref('pay')">立即购买</a>
+        </div>
+    </div>
+</template>
+
+<!--立即支付-->
+<template id="pay_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="pay_main">
+                <div class="pay_amount">
+                    <ul>
+                        <li>¥{{parentMsg.pay.totalPrice | eachTwo}}</li>
+                        <li>支付金额</li>
+                    </ul>
+                    <div class="pay_amount_tips">
+                        <p>全额付款</p>
+                        <p>该商品需要全额支付</p>
+                    </div>
+                    <div class="bottom_img"></div>
+                </div>
+                <div class="pay_goods">
+                    <ul class="pro_goods">
+                        <li class="pro_goods_img"><img :src=" parentMsg.pay.img "/></li>
+                        <li class="pro_goods_info">
+                            <dt>{{parentMsg.pay.title}}</dt>
+                            <dd><p>× {{parentMsg.pay.number}}</p>{{parentMsg.pay.onePrice | eachTwo}}</dd>
+                        </li>
+                    </ul>
+                    <div class="bottom_img"></div>
+                </div>
+                <div class="pay_delivery_way">
+                    <p>发货方式</p>
+                    <ul>
+                        <li>自提<a :class=" base.getType == 1 ? 'active' : '' " @click=" base.getType = 1 " href="javascript:;"></a></li>
+                        <li>快递<a :class=" base.getType == 2 ? 'active' : '' " @click=" base.getType = 2 " href="javascript:;"></a></li>
+                        <li class="express" transition="express" v-if=" base.getType == 2 ">
+                            <dd>收货人</dd>
+                            <dt><input v-model=" base.consignee " type="text" placeholder="请输入收货人" @blur="_resetScroll()" @focus="_hideFoot()"></dt>
+                        </li>
+                        <li class="express" transition="express" v-if=" base.getType == 2 ">
+                            <dd>联系电话</dd>
+                            <dt><input type="tel" v-model=" base.phone " placeholder="请输入收货人的联系电话" maxlength="11" @blur="_resetScroll()" @focus="_hideFoot()"></dt>
+                        </li>
+                        <li class="express" transition="express" style="height:1.2rem;" v-if=" base.getType == 2 ">
+                            <dd>收货地址</dd>
+                            <dt><textarea v-model=" base.pickup_information " placeholder="请输入收货地址" @blur="_resetScroll()" @focus="_hideFoot()"></textarea></dt>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pay_delivery_way">
+                    <p>支付方式</p>
+                    <ul>
+                        <!-- <li>余额<a :class=" base.payType == 1 ? 'active' : '' " @click=" base.payType = 1 " href="javascript:;"></a></li> -->
+                        <li>微信<a :class=" base.payType == 2 ? 'active' : '' " @click=" base.payType = 2 " href="javascript:;"></a></li>
+                    </ul>
+                </div>
+                <div class="bottom_img"></div>
+            </div>
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            支付
+        </div>
+        <div class="product_detail_btn clearfix" v-show=" base.foot ">
+            <button class="pay" @click="_showTips()">立即支付</button>
+        </div>
+        <!-- 弹窗 -->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    提示
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">发起支付后会离开当前页面，确定要前往支付吗？</div>
+                </div>
+                <div class="pop_info_btn">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save" @click="_changOrder()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 订单 -->
+<template id="order_page">
+    <div class="wrapper" style="padding-top:2.56rem;">
+        <div id="scroller">
+            <template v-if=" base.dataList.length ">
+                <div class="order_main" v-for="d in base.dataList">
+                    <div class="order_main_head clearfix">
+                        <dd>订单号:{{d.order_no}}</dd>
+                        <dt>{{d.pay_status | eachEcho 'status'}}</dt>
+                    </div>
+                    <div class="order_info">
+                        <div class="order_info_box" @click="_goOrderDetail(d)">
+                            <div class="order_info_pic flexBox">
+                                <img :src=" d.title_pic " alt="">
+                            </div>
+                            <div class="order_info_main clearfix">
+                                <div class="order_info_left">{{d.title}}</div>
+                                <ul class="order_info_right">
+                                    <li>￥{{d.unit_price | eachTwo}}</li>
+                                    <li>x{{d.number}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order_main_total">共{{d.number}}件商品  合计￥{{d.total_price | eachTwo}}（运费{{0 | eachTwo}}）</div>
+                    <div class="order_main_btn clearfix" v-if=" d.cid == parentMsg.base.user_id && d.pay_status != 4 ">
+                        <button class="pay" @click="_goPayPage(d)" v-if=" d.pay_status == 1 ">立即付款</button>
+                        <button class="cancel" @click="_cancelShow(d.id)" v-if=" d.pay_status == 1 ">取消订单</button>
+                        <button class="pay" v-if=" d.pay_status == 2 " @click="_changeStatus(d,2)">确认收货</button>
+                        <button class="cancel" v-if=" d.pay_status == 2 " @click="_goReturn(d)">申请退款</button>
+                        <button class="pay" v-if=" d.pay_status == 3 " @click="_goReturn(d)">申请退款</button>
+                        <!-- <button class="pay" v-if=" d.pay_status == 4 " @click="_changeStatus(d,3)">确认收款</button> -->
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <div class="data_else">没有符合的数据</div>
+            </template>
+            <div class="order_block">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--取消订单-->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    提示
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">确定要取消该订单吗？</div>
+                </div>
+                <div class="pop_info_btn cl">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save" @click="_cancelOrder()">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order_head">
+            <div class="order_head_top" @click="_goSearchPage()">
+                <div class="order_search">搜索</div>
+            </div>
+            <div class="order_title_box">
+                <ul class="order_head_box clearfix">
+                    <li :class=" order.status == 1 ? 'active' : '' " @click=" order.status = 1 ">待付款</li>
+                    <li :class=" order.status == 2 ? 'active' : '' " @click=" order.status = 2 ">提货/发货</li>
+                    <li :class=" order.status == 4 ? 'active' : '' " @click=" order.status = 4 ">退款中</li>
+                    <li :class=" order.status == 3 ? 'active' : '' " @click=" order.status = 3 ">已完成</li>
+                    <li :class=" order.status == 5 ? 'active' : '' " @click=" order.status = 5 ">已退款</li>
+                </ul>
+            </div>
+        </div>
+        <div class="signIn_head">
+            <dd class="back" onclick="backPage('personal')"></dd>
+            订单
+        </div>
+        <!-- <ul class="count_foot order clearfix">
+            <li onclick="backPage('count')">统计</li>
+            <li onclick="backPage('promotion')">活动</li>
+            <li class="active">任务</li>
+            <li onclick="routerHref('personal')">个人</li>
+        </ul> -->
+    </div>
+</template>
+
+<!-- 订单详情 -->
+<template id="orderDetail_page">
+    <div class="wrapper">
+        <div id="scroller">
+            <div class="orderDetail_top">
+                <div class="orderDetail_top_status clearfix">
+                    <dd>{{parentMsg.order.database.pay_status | eachEcho 'status'}}</dd>
+                    <dt>￥{{parentMsg.order.database.total_price | eachTwo}}</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 1 ">
+                    <dd>该订单尚未支付</dd>
+                    <dt>全额付款</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 2 && parentMsg.order.database.is_express == 0 ">
+                    <dd>请凭订单有效信息到门店提货</dd>
+                    <dt>全额付款</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 2 && parentMsg.order.database.is_express == 1 ">
+                    <dd>下单后3-5个工作日发货</dd>
+                    <dt>全额付款</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 3 ">
+                    <dd>订单已经完成</dd>
+                    <dt>全额付款</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 4 ">
+                    <dd>该订单正在退款中</dd>
+                    <dt>全额付款</dt>
+                </div>
+                <div class="orderDetail_top_tips clearfix" v-show=" parentMsg.order.database.pay_status == 5 ">
+                    <dd>该订单已退款</dd>
+                    <dt>全额付款</dt>
+                </div>
+            </div>
+            <div class="orderDetail_btn clearfix" v-show=" parentMsg.order.database.pay_status == 1 ">
+                <button @click="_goPayPage()">立即支付</button>
+            </div>
+            <div class="orderDetail_btn clearfix" v-show=" parentMsg.order.database.pay_status == 3 ">
+                <button onclick="backPage('promotion')">再次购买</button>
+            </div>
+            <div class="orderDetail_main">
+                <div class="orderDetail_main_box">
+                    <div class="orderDetail_info">
+                        <div class="orderDetail_info_pic flexBox">
+                            <img :src=" parentMsg.order.database.title_pic " alt="">
+                        </div>
+                        <div class="orderDetail_info_main">
+                            <div class="orderDetail_info_text">{{parentMsg.order.database.title}}</div>
+                            <div class="orderDetail_info_price clearfix">
+                                <dd>￥{{parentMsg.order.database.unit_price | eachTwo}}</dd>
+                                <dt>x {{parentMsg.order.database.number}}</dt>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orderDetail_line">
+                <div class="orderDetail_line_box"></div>
+            </div>
+            <div class="orderDetail_address">
+                <div class="orderDetail_address_box" v-if=" parentMsg.order.database.is_express == 0 ">
+                    <div class="orderDetail_address_title">取货信息</div>
+                    <ul class="orderDetail_address_detail">
+                        <li>{{parentMsg.order.database.name}}</li>
+                        <li>{{parentMsg.order.database.nickname}}　　{{parentMsg.order.database.mobile}}</li>
+                        <li>{{parentMsg.order.database.shop_address}}</li>
+                    </ul>
+                </div>
+                <div class="orderDetail_address_box" v-if=" parentMsg.order.database.is_express == 1 ">
+                    <div class="orderDetail_address_title">收货信息</div>
+                    <ul class="orderDetail_address_detail">
+                        <li>{{parentMsg.order.database.consignee}}　　{{parentMsg.order.database.phone}}</li>
+                        <li>{{parentMsg.order.database.pickup_information}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="orderDetail_other">
+                <ul class="orderDetail_other_detail">
+                    <li>订单编号：{{parentMsg.order.database.order_no}}</li>
+                    <li>创建时间：{{parentMsg.order.database.create_time | eachDate 'YYYY-MM-DD HH:mm:ss'}}</li>
+                    <li v-if=" parentMsg.order.database.pay_status != 1 ">支付时间：{{parentMsg.order.database.pay_time | eachDate 'YYYY-MM-DD HH:mm:ss'}}</li>
+                </ul>
+            </div>
+
+            <div class="signIn_block"></div>
+        </div>
+
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            订单详情
+        </div>
+    </div>
+</template>
+
+<!-- 个人 -->
+<template id="personal_page">
+    <div class="wrapper" style="padding:0;">
+        <div id="scroller">
+            <div class="personal_top">
+                <div class="user_change" onclick="routerHref('userChange')" v-if=" base.is_manager == 1 || base.is_shopowner == 1 ">切换</div>
+                <div class="personal_top_box" onclick="routerHref('personalDetail')">
+                    <!-- <div v-if=" base.avatarShow "> -->
+                        <div class="personal_top_avatar" v-if=" base.database.user.headimgurl ">
+                            <img :src=" base.database.user.headimgurl " alt="">
+                        </div>
+                        <!-- <div class="personal_top_avatar" v-else>
+                            <img src="img/personal/personal_avatar.png" alt="">
+                        </div>
+                    </div> -->
+                    <ul class="personal_top_name">
+                        <li class="first">{{base.database.user.nickname}}<span>{{base.database.user.user_level | eachLevel}}</span></li>
+                        <li>{{base.database.user.mobile}}</li>
+                        <li>加入时间：{{base.database.user.createtime | eachDate}}</li>
+                    </ul>
+                    <div class="personal_top_right"></div>
+                </div>
+            </div>
+            <ul class="personal_get clearfix">
+                <li @click="_clearStorage()">
+                    <dd>{{base.database.goods_num || 0}}</dd>
+                    <dt>待提货/发货</dt>
+                </li>
+                <li>
+                    <dd>{{base.database.statistics.share_price_new | eachTwo}}</dd>
+                    <dt>今日收益(元)</dt>
+                </li>
+                <li>
+                    <dd>{{base.database.statistics.commission_price_new | eachTwo}}</dd>
+                    <dt>今日佣金(元)</dt>
+                </li>
+            </ul>
+            <div class="personal_info" onclick="routerHref('poster')">
+                代言人
+                <dd></dd>
+            </div>
+            <div class="personal_info" onclick="routerHref('wallet')">
+                钱包
+                <dd></dd>
+            </div>
+            <div class="personal_info" onclick="routerHref('order')">
+                订单
+                <dd></dd>
+            </div>
+            <div class="personal_info" onclick="routerHref('warranty')">
+                质保单
+                <dd></dd>
+            </div>
+            <!-- <div class="personal_info">
+                我要升级
+                <dd></dd>
+            </div> -->
+            <div class="personal_info" onclick="routerHref('message')">
+                消息通知
+                <dd></dd>
+            </div>
+            <div class="personal_info" onclick="routerHrefId('getCash',1)">
+                提现申请
+                <dd></dd>
+            </div>
+            <div class="personal_block"></div>
+        </div>
+
+        <ul class="count_foot personal clearfix">
+            <li onclick="backPage('count')">统计</li>
+            <li onclick="backPage('promotion')">活动</li>
+            <li onclick="backPage('dailyTask')">任务</li>
+            <li class="active">个人</li>
+        </ul>
+    </div>
+</template>
+
+<!-- 每日任务 -->
+<template id="dailyTask_page">
+    <div class="wrapper" style="padding-top:0;">
+        <div id="scroller">
+            <div class="dailyTask_top">
+                <div class="dailyTask_top_side clearfix" transition="taskSide" v-if=" progress.side ">
+                    <dd>今日活跃度</dd>
+                    <dt>{{progress.active}}</dt>
+                </div>
+                <div class="count_progress_one">
+                    <div class="count_progress_img">
+                        <dd></dd>
+                        <dt class="one" v-if=" progress.width > 19 "></dt>
+                        <dt class="two" v-if=" progress.width > 39 "></dt>
+                        <dt class="three" v-if=" progress.width > 59 "></dt>
+                        <dt class="four" v-if=" progress.width > 79 "></dt>
+                        <dt class="five" v-if=" progress.width > 99 "></dt>
+                    </div>
+                </div>
+                <ul class="count_progress_number clearfix">
+                    <li class="one">0</li>
+                    <li class="two">20</li>
+                    <li class="three">40</li>
+                    <li class="four">60</li>
+                    <li class="five">80</li>
+                    <li class="six">100</li>
+                </ul>
+                <div class="dailyTask_top_text">
+                    您今天的任务已完成{{progress.num}}%<br>
+                    <span>(必须先签到后才能核算每日任务)</span>
+                </div>
+            </div>
+            <div class="dailyTask_bottom">
+                <div class="dailyTask_info">
+                    <div class="dailyTask_info_img"></div>
+                    <div class="dailyTask_info_text">
+                        <dd>签到</dd>
+                        <dt>每日签到打卡</dt>
+                    </div>
+                    <div class="dailyTask_info_right">{{progress.signIn}} / 1</div>
+                    <div class="dailyTask_info_btn clearfix">
+                        <button onclick="routerHref('signIn')">签到</button>
+                    </div>
+                </div>
+                <div class="dailyTask_info">
+                    <div class="dailyTask_info_img"></div>
+                    <div class="dailyTask_info_text">
+                        <dd>代言人</dd>
+                        <dt>发展{{progress.developcount}}个代言人</dt>
+                    </div>
+                    <div class="dailyTask_info_right">{{progress.develop_user}} / {{progress.developcount}}</div>
+                    <div class="dailyTask_info_btn clearfix">
+                        <button onclick="routerHref('invite')">邀请</button>
+                    </div>
+                </div>
+                <div class="dailyTask_info">
+                    <div class="dailyTask_info_img"></div>
+                    <div class="dailyTask_info_text">
+                        <dd>分享次数</dd>
+                        <dt>分享{{progress.sharecount}}次朋友圈</dt>
+                    </div>
+                    <div class="dailyTask_info_right">{{progress.share}} / {{progress.sharecount}}</div>
+                    <div class="dailyTask_info_btn clearfix">
+                        <button onclick="routerHref('promotion')">前往</button>
+                    </div>
+                </div>
+                <div class="dailyTask_info">
+                    <div class="dailyTask_info_img"></div>
+                    <div class="dailyTask_info_text">
+                        <dd>转发次数</dd>
+                        <dt>转发{{progress.forwardcount}}个好友</dt>
+                    </div>
+                    <div class="dailyTask_info_right">{{progress.forward}} / {{progress.forwardcount}}</div>
+                    <div class="dailyTask_info_btn clearfix">
+                        <button onclick="routerHref('promotion')">前往</button>
+                    </div>
+                </div>
+                <div class="dailyTask_info">
+                    <div class="dailyTask_info_img"></div>
+                    <div class="dailyTask_info_text">
+                        <dd>订单成交数</dd>
+                        <dt>成交{{progress.completecount}}个订单</dt>
+                    </div>
+                    <div class="dailyTask_info_right">{{progress.complete_order}} / {{progress.completecount}}</div>
+                    <div class="dailyTask_info_btn clearfix">
+                        <button onclick="routerHref('order')">前往</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="signIn_block"></div>
+        </div>
+
+        <!-- <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            每日任务
+        </div> -->
+        <ul class="count_foot order clearfix">
+            <li onclick="backPage('count')">统计</li>
+            <li onclick="backPage('promotion')">活动</li>
+            <li class="active">任务</li>
+            <li onclick="routerHref('personal')">个人</li>
+        </ul>
+    </div>
+</template>
+
+<!-- 个人资料 -->
+<template id="personalDetail_page">
+    <div class="wrapper personalDetail_bg">
+        <div id="scroller" class="personalDetail_bg">
+            <div class="personalDetail_top">
+                <div class="personalDetail_lv">
+                    <ul class="personalDetail_lv_box clearfix">
+                        <li class="top" :class=" base.level | eachLevel '1' ">
+                            LV.1
+                            <dd></dd>
+                        </li>
+                        <li class="bottom" :class=" base.level | eachLevel '2' ">
+                            LV.2
+                            <dd></dd>
+                        </li>
+                        <li class="top" :class=" base.level | eachLevel '3' ">
+                            LV.3
+                            <dd></dd>
+                        </li>
+                        <li class="bottom" :class=" base.level | eachLevel '4' ">
+                            LV.4
+                            <dd></dd>
+                        </li>
+                        <li class="top" :class=" base.level | eachLevel '5' ">
+                            LV.5
+                            <dd></dd>
+                        </li>
+                        <li class="bottom" :class=" base.level | eachLevel '6' ">
+                            LV.6
+                            <dd></dd>
+                        </li>
+                        <li class="top" :class=" base.level | eachLevel '7' ">
+                            LV.7
+                            <dd></dd>
+                        </li>
+                        <li class="bottom" :class=" base.level | eachLevel '8' ">
+                            LV.8
+                            <dd></dd>
+                        </li>
+                        <li class="top" :class=" base.level | eachLevel '9' ">
+                            LV.9
+                            <dd></dd>
+                        </li>
+                        <li class="bottom" :class=" base.level | eachLevel '10' ">
+                            LV.10
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="personalDetail_mid">
+                <div class="personalDetail_mid_box">
+                    <!-- <div v-if=" base.avatarShow "> -->
+                        <div class="personalDetail_mid_img" v-if=" base.avatar ">
+                            <img :src=" base.avatar " alt="">
+                        </div>
+                        <!-- <div class="personalDetail_mid_img" v-else>
+                            <img src="img/personalDetail/personalDetail_img.png" alt="">
+                        </div>
+                    </div> -->
+                    <div class="personalDetail_mid_text">
+                        <div class="personalDetail_mid_name">{{base.database.user.nickname}}</div>
+                        <div class="personalDetail_mid_phone">{{base.database.user.mobile}}</div>
+                        <div class="personalDetail_mid_address">{{base.location.ad_info.province | eachLocation '省'}} {{base.location.ad_info.city | eachLocation '市'}}</div>
+                    </div>
+                    <div class="personalDetail_mid_edit" @click="_showEdit()">更改信息</div>
+                    <div class="personalDetail_mid_avatar">
+                        更改头像
+                        <input type="file" @change="_selectAvater( $event.currentTarget.files )">
+                    </div>
+                </div>
+            </div>
+            <div class="personalDetail_bottom">
+                <ul class="personalDetail_bottom_circle clearfix">
+                    <li>
+                        <div class="personalDetail_bottom_info">
+                            <dd>{{base.database.people_number || 0}}</dd>
+                            <dt>代言人数量</dt>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="personalDetail_bottom_info">
+                            <dd>{{base.database.order_number || 0}}</dd>
+                            <dt>订单数量</dt>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="personalDetail_bottom_info">
+                            <dd>0</dd>
+                            <dt>综合排位</dt>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="personalDetail_bottom_other clearfix">
+                    <li>
+                        邀请人数
+                        <span>{{base.database.people_number || 0}}</span>
+                    </li>
+                    <li class="right">
+                        　转发次数
+                        <span>{{base.database.forward_all || 0}}</span>
+                    </li>
+                    <li>
+                        分享次数
+                        <span>{{base.database.share_all || 0}}</span>
+                    </li>
+                    <li class="right">
+                        订单成交数
+                        <span>{{base.database.complete_order || 0}}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="signIn_block"></div>
+        </div>
+
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            个人资料
+        </div>
+
+        <div class="msg_pop flexBox" v-if=" phone.show ">
+            <div class="pop_info" transition="msgPop" v-if=" phone.show ">
+                <div class="pop_info_title">
+                    更改信息
+                    <dd @click=" phone.show = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_input clearfix" style="margin-bottom:0.3rem;">
+                        <dd>昵　　称</dd>
+                        <dt>
+                            <input type="text" v-model=" phone.name ">
+                        </dt>                        
+                    </div>
+                    <div class="pop_info_input clearfix" style="margin-bottom:0.3rem;">
+                        <dd>真实姓名</dd>
+                        <dt>
+                            <input type="text" v-model=" phone.realname ">
+                        </dt>                        
+                    </div>
+                    <div class="pop_info_input clearfix">
+                        <dd>手机号码</dd>
+                        <dt>
+                            <input type="tel" maxlength="11" v-model=" phone.number ">
+                        </dt>                        
+                    </div>
+                </div>
+                <div class="pop_info_btn cl">
+                    <button class="cancel" @click=" phone.show = false ">取消</button>
+                    <button class="save" @click="_editPhone()">确定</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+
+<!-- 代言人-->
+<template id="poster_page">
+    <div class="wrapper poster_bg" style="padding-top:1.68rem;">
+        <div id="scroller" class="poster_bg">
+            <div class="poster_total">天梯排行，共 {{base.dataList.length}} 人</div>
+            <div class="poster_main" v-if=" base.dataList.length ">
+                <div class="poster_info clearfix" :class=" $index | eachRank " v-for="d in base.dataList" @click="_setToken(d.token,d.id)">
+                    <div class="poster_info_rank">
+                        <span v-show=" $index > 2 ">{{$index + 1}}</span>
+                    </div>
+                    <div class="poster_info_avatar">
+                        <img :src=" d.headimgurl " alt="">
+                        <dd></dd>
+                    </div>
+                    <div class="poster_info_detail">
+                        <div class="poster_info_name clearfix">
+                            {{d.nickname}}<span v-if=" d.realname ">({{d.realname}})</span>
+                            <dd>LV.{{d.user_level}}</dd>
+                        </div>
+                        <ul class="poster_owninfo_circle rank clearfix">
+                            <li class="order">
+                                <dd></dd>
+                                <dt>订单数 {{d.order_number}}</dt>
+                            </li>
+                            <li class="get">
+                                <dd></dd>
+                                <dt>收益 {{d.profit_all | eachTwo}}</dt>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="data_else" v-else>没有符合的数据</div> -->
+
+            <div class="poster_block" v-if=" base.ownShow "></div>
+            <div class="poster_block_else" v-else></div>
+        </div>
+
+        <div class="order_head" style="top:0;">
+            <div class="poster_head">
+                <dd class="back" onclick="goBack()"></dd>
+                代言人
+            </div>
+            <ul class="order_head_bottom clearfix">
+                <li :class=" title.tabs == 2 ? 'active' : '' " @click=" title.tabs = 2 ">全部</li>
+                <li :class=" title.tabs == 3 ? 'active' : '' " @click=" title.tabs = 3 ">代言人</li>
+                <li :class=" title.tabs == 4 ? 'active' : '' " @click=" title.tabs = 4 ">合伙人</li>
+                <li :class=" title.tabs == 5 ? 'active' : '' " @click=" title.tabs = 5 ">联合创始人</li>
+            </ul>
+        </div>
+        <div class="poster_own clearfix" transition="ownRank" v-if=" base.ownShow ">
+            <div class="poster_ownrank">
+                <dd>{{base.ownData.rank}}</dd>
+                <dt>我的排名</dt>
+            </div>
+            <div class="poster_ownavatar">
+                <img :src=" base.ownData.headimgurl " alt="">
+            </div>
+            <div class="poster_owninfo">
+                <div class="poster_owninfo_name">
+                {{base.ownData.nickname}}<span v-if=" base.ownData.realname ">({{base.ownData.realname}})</span>
+                    <dd>LV.{{base.ownData.user_level}}</dd>
+                </div>
+                <ul class="poster_owninfo_circle clearfix">
+                    <li class="order">
+                        <dd></dd>
+                        <dt>订单数 {{base.ownData.order_number}}</dt>
+                    </li>
+                    <li class="get">
+                        <dd></dd>
+                        <dt>收益 {{base.ownData.profit_all | eachTwo}}</dt>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 代言人资料 -->
+<template id="posterDetail_page">
+    <div class="wrapper posterDetail_bg">
+        <div id="scroller" class="posterDetail_bg">
+            <div class="posterDetail_top">
+                <div class="posterDetail_top_box">
+                    <div class="posterDetail_top_avatar" v-if=" base.database.user.headimgurl ">
+                        <img :src=" base.database.user.headimgurl " alt="">
+                    </div>
+                    <ul class="posterDetail_top_info">
+                        <li class="first">{{base.database.user.nickname}}<span>{{base.database.user.user_level | eachLevel}}</span></li>
+                        <li>{{base.database.user.mobile}}</li>
+                        <li>加入时间：{{base.database.user.createtime | eachDate}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="posterDetail_map">
+                <div class="posterDetail_map_title clearfix">
+                    进行中的订单
+                    <dd></dd>
+                    <dt>{{base.result.order_conduct || 0}}</dt>
+                </div>
+                <div class="posterDetail_map_info">
+                    <ul class="posterDetail_mapInfo_title clearfix">
+                        <!-- <li :class=" title.tabs == 'a' ? 'active' : '' " @click=" title.tabs = 'a' ">
+                            <dd>本月成绩</dd>
+                        </li> -->
+                        <li :class=" title.tabs == 'b' ? 'active' : '' " style="width:100%;">
+                            <dd>累计成绩</dd>
+                        </li>
+                    </ul>
+                    <div class="posterDetail_mapInfo_top">分享地点分布图</div>
+                    <div class="posterDetail_mapInfo_map">
+                        <img src="img/posterDetail/posterDetail_map.png" alt="">
+                    </div>
+                    <div class="posterDetail_mapInfo_foot">累计分享次数{{base.result.share_all || 0}}次</div>
+                </div>
+                <ul class="posterDetail_map_foot">
+                    <li class="first clearfix">
+                        <dd>总收益(元)</dd>
+                        <dt>{{base.result.profit_all | eachTwo}}</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>分享金(元)<span>{{base.result.share_price_all | eachTwo}}</span></dd>
+                        <dt>佣金(元)<span>{{base.result.commission_price_all | eachTwo}}</span></dt>
+                    </li>
+                </ul>
+            </div>
+            <div class="posterDetail_map">
+                <ul class="posterDetail_map_foot">
+                    <li class="first clearfix">
+                        <dd>订单总量</dd>
+                        <dt>{{base.result.order_num || 0}}</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>订单总金额(元)<span>{{base.result.total_price | eachTwo}}</span></dd>
+                    </li>
+                </ul>
+            </div>
+            <div class="posterDetail_map">
+                <ul class="posterDetail_map_foot">
+                    <li class="clearfix">
+                        <dd>分享收益占比</dd>
+                        <dt>{{base.result.share_price_proportion | eachPercent}}%</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>佣金收益占比</dd>
+                        <dt>{{base.result.commission_price_proportion | eachPercent}}%</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>吸引客户</dd>
+                        <dt>{{base.result.count || 0}}</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>转发次数</dd>
+                        <dt>{{base.result.forward_all || 0}}</dt>
+                    </li>
+                    <!-- <li class="clearfix">
+                        <dd>客单价(元)</dd>
+                        <dt>256</dt>
+                    </li>
+                    <li class="clearfix">
+                        <dd>件单价(元)</dd>
+                        <dt>256</dt>
+                    </li> -->
+                </ul>
+            </div>
+
+            <div class="signIn_block"></div>
+        </div>
+
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            代言人资料
+        </div>
+    </div>
+</template>
+
+<!--钱包-->
+<template id="wallet_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div class="scroller">
+            <div class="wallet_main">
+                <div class="wallet_sum_box">
+                    <div class="wallet_sum">
+                        <dd>可用余额（元）</dd>
+                        <p>{{base.database.amount | eachTwo}}</p>
+                    </div>
+                </div>
+                <span class="wallet_total">累计收益 {{base.database.profit_all | eachTwo}} 元</span>
+                <div class="bottom_img"></div>
+                <ul class="wallet_btns">
+                    <!-- <li class="wallet_detail">资产明细</li> -->
+                    <li class="wallet_getcash" onclick="routerHrefId('getCash',1)">提现</li>
+                    <!-- <li class="wallet_apply">提现申请</li> -->
+                </ul>
+            </div>
+        </div>
+        <!--页面顶部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            钱包
+            <dd class="right" onclick="routerHref('walletDetail')">明细</dd>
+        </div>
+    </div>
+</template>
+
+<!--提现申请-->
+<template id="getcash_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <!-- <ul class="getcash_card flexBox">
+                <li><img class="main" src="./img/getcash/card_pic.png" alt=""/></li>
+                <li>
+                    <p>招商银行</p>
+                    <div>尾号 1234 储蓄卡</div>
+                </li>
+                <li><img src="./img/getcash/go_right.png" alt=""></li>
+            </ul> -->
+            <ul class="getcash_money">
+                <li>提现金额</li>
+                <li class="getcash_money_box clearfix">
+                    <dd>¥</dd>
+                    <input type="number" v-model=" base.number ">
+                </li>
+            </ul>
+            <div class="bottom_img"></div>
+            <p class="getcash_available">
+                可提现金额 {{base.amount | eachTwo}} 元<br>
+                <span>(一天最多只能提现10次，且一次不能小于1元或大于200元)</span>
+            </p>
+            <!-- <div class="bottom_img abs_bottom"></div> -->
+        </div>
+        <!--页面顶部和页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="backPage('personal')"></dd>
+            提现申请
+            <dd class="right" onclick="routerHref('getCashDetail')">提现记录</dd>
+        </div>
+        <div class="product_detail_btn clearfix">
+            <button class="pay" @click="_subGetCash()">提交申请</button>
+        </div>
+    </div>
+</template>
+
+<!--消息-->
+<template id="message_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="msg_main">
+                <ul class="msg_list" v-for="d in base.dataList" @click="_showDetail(d,$index)">
+                    <li class="msg_list_imgElse clearfix" v-if=" d.record_status == 1 ">
+                        <img class="main" src="./img/message/msg_open.png" alt="">
+                    </li>
+                    <li class="msg_list_img clearfix" v-else>
+                        <img class="main" src="./img/message/msg_new1.png" alt="">
+                    </li>
+                    <li class="msg_list_text">{{d.headline | eachTitle}}</li>
+                    <li class="msg_list_date">{{d.create_time | eachDate}}</li>
+                    <li class="msg_list_circle clearfix" v-if=" d.record_status == 0 "><img class="main" src="./img/message/msg_new2.png" alt=""></li>
+                </ul>
+            </div>
+        </div>
+        <!--弹窗-->
+        <div class="msg_pop flexBox" v-if=" base.detailShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.detailShow ">
+                <div class="pop_info_title">
+                    详情
+                    <dd @click=" base.detailShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text">{{base.detail}}</div>
+                </div>
+                <div class="pop_info_btn clearfix">
+                    <button class="save" @click="_delOneMessage()" style="float:right;">删除</button>
+                </div>
+            </div>
+        </div>
+        <!--快速删除-->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    提示
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">确定要删除所有已读消息吗？</div>
+                </div>
+                <div class="pop_info_btn">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save" @click="_delMessage()">确定</button>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部与页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            消息通知
+        </div>
+        <div class="message_foot clearfix">
+            <button @click=" base.delShow = true ">快速删除</button>
+        </div>
+    </div>
+</template>
+
+<!--质保单-->
+<template id="warranty_page">
+    <div class="wrapper">
+        <!--主体内容-->
+        <div id="scroller">
+            <div class="warranty_tmp_main clearfix" v-if=" base.dataList.length ">
+                <div class="order_main" v-for="d in base.dataList">
+                    <div class="order_main_head clearfix">
+                        <dd>订单号:{{d.order_no}}</dd>
+                    </div>
+                    <div class="order_info">
+                        <div class="order_info_box">
+                            <div class="order_info_pic flexBox">
+                                <img style="width:60%;" src="img/warranty/tmp_pic.png" alt="">
+                            </div>
+                            <div class="order_info_main clearfix">
+                                <div class="order_info_left">{{d.order_title}}</div>
+                                <ul class="order_info_right">
+                                    <li>￥{{d.order_price | eachTwo}}</li>
+                                    <li>x{{d.order_num}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order_main_btn clearfix">
+                        <button class="pay" @click="_goWarrantyDetail(d)">查看详情</button>
+                    </div>
+                </div>
+            </div>
+            <div class="data_else" v-else>没有符合的数据</div>
+            <div class="pull_loading" style="height:0.88rem;">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--页面顶部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="backPage('personal')"></dd>
+            质保单
+        </div>
+        <!-- <ul class="promotion_top war_top" v-if="topMenu.selected.value==2">
+            <li :class=" topMenu.tabs == 'a' ? 'active' : '' " @click=" topMenu.tabs = 'a' ">未审核</li>
+            <li :class=" topMenu.tabs == 'b' ? 'active' : '' " @click=" topMenu.tabs = 'b' ">已审核</li>
+        </ul> -->
+    </div>
+</template>
+
+<!--切换-->
+<template id="userChange_page">
+    <div class="wrapper userChange_bg">
+        <!--主体内容-->
+        <div id="scroller" class="userChange_bg">
+            <div class="userChange_main">
+                <div class="userChange_title">当前权限角色为{{base.power | eachEcho 'power'}}</div>
+                <div class="userChange_info" :class=" base.power == 1 ? 'active' : '' " @click="_goBossPage()" v-if=" base.is_manager == 1 ">
+                    <dd></dd>
+                    老板
+                </div>
+                <div class="userChange_info" :class=" base.power == 2 ? 'active' : '' " @click="_goShopPage()" v-if=" base.is_shopowner == 1 || base.is_manager == 1 ">
+                    <dd></dd>
+                    店长
+                </div>
+                <div class="userChange_info staff" :class=" base.power == 3 ? 'active' : '' " @click="_backPersonal(3)" v-if=" base.is_shopowner == 1 || base.is_manager == 1 || base.is_clerk == 1 ">
+                    <dd></dd>
+                    店员
+                </div>
+                <div class="userChange_info staff" :class=" base.power == 4 ? 'active' : '' " @click="_backPersonal(4)">
+                    <dd></dd>
+                    代言人
+                </div>
+            </div>
+        </div>
+        <!--页面顶部与页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            切换
+        </div>
+    </div>
+</template>
+
+<!--提现记录-->
+<template id="getCashDetail_page">
+    <div class="wrapper userChange_bg" style="padding-top:1.68rem;">
+        <!--主体内容-->
+        <div id="scroller" class="userChange_bg">
+            <div class="getCash_main" style="padding-top:0.2rem;">
+                <!-- <div class="getCash_title">累计提现金额：6400元</div> -->
+                <template v-if=" base.dataList.length ">
+                <div class="getCash_info" v-for="d in base.dataList">
+                    <div class="getCash_info_left">
+                        <dd>提现</dd>
+                        <dt>{{d.create_time | eachDate}}</dt>
+                    </div>
+                    <div class="getCash_info_right">{{d.real_pay | eachTwo}}元</div>
+                </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </div>
+
+            <div class="pull_loading" style="height:1.88rem">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--快速删除-->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    提示
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">确定要删除所有提现记录吗？</div>
+                </div>
+                <div class="pop_info_btn cl">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save">确定</button>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部与页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="backPage('getCash/1')"></dd>
+            提现记录
+        </div>
+        <div class="getCashDetail_head">
+            <ul class="order_head_bottom clearfix">
+                <li :class=" base.status == 0 ? 'active' : '' " @click=" base.status = 0 " style="width:50%;">未审核</li>
+                <li :class=" base.status == 1 ? 'active' : '' " @click=" base.status = 1 " style="width:50%;">已审核</li>
+            </ul>
+        </div>
+        <!-- <div class="getCash_foot">
+            <div class="getCash_foot_info clearfix">
+                <button @click=" base.delShow = true ">快速删除</button>
+            </div>
+        </div> -->
+    </div>
+</template>
+
+<!--钱包明细-->
+<template id="walletDetail_page">
+    <div class="wrapper userChange_bg">
+        <!--主体内容-->
+        <div id="scroller" class="userChange_bg">
+            <div class="getCash_main" style="padding-top:0.2rem;">
+                <!-- <div class="getCash_title">累计收益：6400元</div> -->
+                <template v-if=" base.dataList.length ">
+                    <div class="getCash_info" v-for="d in base.dataList">
+                        <div class="getCash_info_left">
+                            <dd>{{d.type | eachType}}</dd>
+                            <dt>{{d.create_date | cutDate}}</dt>
+                        </div>
+                        <div class="getCash_info_right">{{d.MONEY | eachTwo}}元</div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="data_else">没有符合的数据</div>
+                </template>
+            </div>
+            <div class="pull_loading" style="height:1rem">{{base.text}}</div>
+            <div class="pull_block" v-if=" base.onoff "></div>
+        </div>
+        <!--快速删除-->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    提示
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">确定要删除所有收入记录吗？</div>
+                </div>
+                <div class="pop_info_btn cl">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save">确定</button>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部与页面底部-->
+        <div class="signIn_head">
+            <dd class="back" onclick="goBack()"></dd>
+            明细
+        </div>
+        <!-- <div class="getCash_foot">
+            <div class="getCash_foot_info clearfix">
+                <button @click=" base.delShow = true ">快速删除</button>
+            </div>
+        </div> -->
+    </div>
+</template>
+
+<!--404页面-->
+<template id="error_page">
+    <div class="wrapper error_bg">
+        <!--主体内容-->
+        <div id="scroller" class="error_bg">
+            <div class="error_main">
+                404
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--搜索-->
+<template id="search_page">
+    <div class="wrapper search_bg" style="padding-top:1.88rem;">
+        <!--主体内容-->
+        <div id="scroller" class="search_bg_other">
+            <ul class="search_info">
+                <li v-for="d in base.dataList" @click="_goHistory(d.content)">{{d.content}}</li>
+            </ul>
+            <div class="search_btn">
+                <button @click=" base.delShow = true ">清空历史搜索</button>
+            </div>
+
+            <div class="search_block"></div>
+        </div>
+        <!--清空历史-->
+        <div class="msg_pop flexBox" v-if=" base.delShow ">
+            <div class="pop_info" transition="msgPop" v-if=" base.delShow ">
+                <div class="pop_info_title">
+                    删除记录
+                    <dd @click=" base.delShow = false "></dd>
+                </div>
+                <div class="pop_info_main">
+                    <div class="pop_info_text" style="font-size:0.3rem;text-align:center;">确定清空历史记录？</div>
+                </div>
+                <div class="pop_info_btn cl">
+                    <button class="cancel" @click=" base.delShow = false ">取消</button>
+                    <button class="save" @click="_delSearch()">确定</button>
+                </div>
+            </div>
+        </div>
+        <!--页面顶部与页面底部-->
+        <div class="search_top">
+            <div class="search_head">
+                <dd class="clearfix">
+                    <form action="javascript:;">
+                        <input type="search" @keyup.enter="_goSearch()" v-model="search.info">
+                    </form>
+                </dd>
+                <dt onclick="goBack()">取消</dt>
+            </div>
+            <div class="search_title">历史记录</div>
+        </div>
+    </div>
+</template>
+
+<!--邀请-->
+<template id="invite_page">
+    <div class="wrapper" style="padding-top:0;">
+        <div class="invite_main">
+            <div class="invite_text">
+                问鼎王者荣耀，可能只差一个合伙人<br>
+                诚挚邀请英雄你，成为我们的事业梦想代言人
+            </div>
+            <div class="invite_pic">
+                <dd class="clearfix"><img src="img/invite/invite_sj.png" alt=""></dd>
+            </div>
+            <div class="invite_btn">
+                <button @click=" base.share = true ">立即邀请</button>
+            </div>
+        </div>
+        <div class="share_tips" v-if=" base.share " @click=" base.share = false ">
+            <dd></dd>
+        </div>
+        <div class="invite_back" onclick="goBack()">返回</div>
+    </div>
+</template>
+
+<!--加入-->
+<template id="join_page">
+    <div class="wrapper" style="padding-top:0;">
+        <div class="join_main">
+            <div class="join_text">
+                问鼎王者荣耀，可能只差一个合伙人<br>
+                诚挚邀请英雄你，成为我们的事业梦想代言人
+            </div>
+            <div class="join_info">
+                <div class="join_info_box">
+                    <dd>姓名</dd>
+                    <dt class="clearfix">
+                        <input type="text" v-model=" info.name ">
+                    </dt>
+                </div>
+            </div>
+            <div class="join_info">
+                <div class="join_info_box">
+                    <dd>联系电话</dd>
+                    <dt class="clearfix">
+                        <input type="tel" maxlength="11" v-model=" info.mobile ">
+                    </dt>
+                </div>
+            </div>
+            <div class="join_btn">
+                <button @click="_joinShare()">立即加入</button>
+            </div>
+        </div>
+        <!-- <div class="join_close" onclick="javascript:wx.closeWindow();">关闭</div> -->
+    </div>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

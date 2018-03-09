@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+<meta http-equiv="Cache-Control" content="must-revalidate">
+<script src="js/meta.js" type="text/javascript"></script>
+<link rel="stylesheet" href="css/swiper.css">
+<script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+<!-- <script src="js/vconsole.min.js" type="text/javascript"></script> -->
+<script src="js/jweixin-1.2.0.js" type="text/javascript"></script>
+<script src="js/moment.min.js" type="text/javascript"></script>
+<script src="js/swiper.min.js" type="text/javascript"></script>
+<script src="js/jquery.lazyload.min.js" type="text/javascript"></script>
+<script src="js/lbundle/lrz.bundle.js" type="text/javascript"></script>
+<script src="js/fastclick.js" type="text/javascript"></script>
+<script src="js/iscroll-probe.js" type="text/javascript"></script>
+<script src="js/vue.min.js" type="text/javascript"></script>
+<script src="js/vue-resource.min.js" type="text/javascript"></script>
+<script src="js/vue-router.min.js" type="text/javascript"></script>
+<script src="layui/lay/dest/layui.all.js" type="text/javascript"></script>
+<script src="js/appIndexsrc.js" type="text/javascript"></script>
+
+<title>合伙人</title>
+</head>
+
+<body id="app-body">
+
+<div id="loading">
+    <div class="sk-three-bounce clearfix">
+        <div class="sk-child sk-bounce1"></div>
+        <div class="sk-child sk-bounce2"></div>
+        <div class="sk-child sk-bounce3"></div>
+    </div>
+</div>
+
+<style id="styleBox"></style>
+
+<div class="main hideDiv">
+
+    <router-view :parent.sync="parentMsg" transition="pageRight"></router-view>
+
+</div>
+
+
+<!-- 模板 -->
+<div id="template"></div>
+
+
+</body>
+<script>
+
+function loaded(){
+    setTimeout(function(){
+        myScroll = new IScroll('.wrapper', {
+            probeType: 3,        
+            mouseWheel: true, 
+            scrollbars: false, 
+            fadeScrollbars: true, 
+            interactiveScrollbars: true, 
+            shrinkScrollbars: 'scale', 
+            useTransform: true, 
+            useTransition: true, 
+            bounce: true, 
+            freeScroll: false, 
+            startX: 0,
+            startY: 0,
+            preventDefault: false,
+        });
+
+    },500)
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+  
+(function(){
+
+    $("#template").load("template/template.html?t=" + new Date().getTime(),function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success"){
+            console.log("成功载入!");
+            new FastClick(document.body);
+            if (/Android/gi.test(navigator.userAgent)) {
+                window.addEventListener('resize', function () {
+                    if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+                        window.setTimeout(function () {
+                            document.activeElement.scrollIntoViewIfNeeded();
+                        }, 0);
+                    }
+                })
+            }
+
+            router.start(App, '#app-body');
+          
+        }
+        if(statusTxt=="error"){
+            alert("Error: "+xhr.status+": "+xhr.statusText);
+        }
+    });
+
+})()
+
+</script>
+
+
+</html>

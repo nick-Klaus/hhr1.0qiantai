@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="must-revalidate">
+    <script>
+        setRem();
+        window.addEventListener("orientationchange", setRem, false);
+        window.addEventListener("resize", setRem, false);
+        function setRem(){
+            var html = document.getElementsByTagName('html')[0];
+
+            var pageWidth = html.getBoundingClientRect().width;
+
+            pageWidth = pageWidth > 750 ? 750 : pageWidth;
+
+            html.style.fontSize = pageWidth / 7.5 + "px";
+
+        }
+    </script>
+    <title></title>
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+</head>
+
+<style>
+    /*初始化*/
+    *{font-size:15px;box-sizing: border-box;}
+    article,aside,audio,body,dd,div,dl,dt,footer,form,h1,h2,h3,h4,h5,h6,header,hr,iframe,input,label,menu,nav,ol,p,section,select,td,textarea,th,time,ul,video,span,img{margin:0;padding:0;}
+    article,aside,audio,canvas,footer,header,nav,section,video{display:block}
+    input::-webkit-search-cancel-button{display:none;}
+    form{display:inline}
+    input,button,select,textarea{font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;}
+    html{width:100%;height:100%;overflow: hidden;}
+    body{color:#141414;word-wrap:break-all;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;width:100%;height:100%;background:#ffffff;-webkit-tap-highlight-color:rgba(93,156,236,0.5);}
+    textarea{resize:none;-webkit-appearance:none;overflow: hidden;}
+
+    iframe,img{border:0;}
+    ol,ul{list-style:none;}
+    h1,h2,h3,h4,h5,h6{color:#141414;font-weight:400}
+    input,label,select,textarea{outline:0;-webkit-user-modify:read-write-plaintext-only;-webkit-tap-highlight-color:transparent;}
+    button{-webkit-appearance:none;outline:0;}
+    label{-webkit-user-modify:read-only}
+    input{border:none;background:0 0;-webkit-appearance:none;}
+    input[type=search],input[type=text]{padding-top:0.1rem!important;padding-bottom:0.1rem!important;}
+    a{color:#141414;text-decoration:none;}
+    select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit-box-shadow:none;box-shadow:none;-webkit-appearance:none}
+
+    .clearfix:after{clear:both;content:"";display: block;}
+    .main{width:100%;height:100%;background:#efeff4;padding-bottom:0.2rem;overflow: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;}
+    
+    
+    /*搜索框*/
+    .search{text-align: center;padding:0.2rem 0 0.2rem 0;border-bottom: 0.01rem solid #e2e2e8}
+    .search input{display:inline-block;padding-left:0rem;border-radius: 0.1rem;width: 95%;height: 0.55rem;text-align: center;color: #9b9b9b;background:#ffffff  url(images/search.png) no-repeat 42%/cover;background-size: 0.32rem 0.29rem; }
+    .search a{color: #09bb07;display: none;float: right;font-size: 0.36rem;margin-right: 0.3rem}
+
+
+    /*表格内容*/
+   .main_content{margin: 0.2rem 0;width: 100%}
+   .main_content .main_content_th th{padding-bottom: 0.2rem}
+   .main_content_th th{padding-left: 0.05rem;color: #000000;font-size: 0.18rem;text-align:center}
+   .main_content tbody td{padding-left: 0.05rem;color: #000000;text-align:center;font-size: 0.23rem}
+   .main_content .blue{color: #00bfff}
+   .main_content tbody tr{line-height: 0.6rem}
+
+
+    /*商标信息*/
+    .reg{text-align: center;background-color: #eeeeee;padding: 0.2rem 0}
+    .reg p{font-size: 0.22rem;color:#9b9b9b }
+    .reg .p1{margin-bottom: 0.1rem}
+</style>
+<body>
+<div class="main">
+    <div class="search">
+        <input type="text"  v-model="username" onfocus="changeinput(this)" placeholder="搜索">
+        <a href="javascript:void(0)" class="search_a" @click="_search()">搜索</a>
+    </div>
+    <div>
+        <table class="main_content">
+            <thead>
+                <tr class="main_content_th">
+                    <th><strong>序号</strong></th>
+                    <th><strong>姓名</strong></th>
+                    <th><strong>手机</strong></th>
+                    <th><strong>当前价格</strong></th>
+                    <th><strong>操作</strong></th>
+                </tr>
+            </thead>
+            <tbody v-for="item in userlist">
+                <tr >
+                    <td>{{$index+1}}</td>
+                    <td>{{item.username}}</td>
+                    <td>{{item.phone_number}}</td>
+                    <td>{{item.new_price}}</td>
+                    <td class="blue">
+                        <span v-if="item.status==1" @click="chack_status(item.id,0,$index)">已兑换</span>
+                        <span v-else @click="chack_status(item.id,1,$index)">兑换</span> 
+                    </td>
+                </tr>
+               
+            </tbody>
+        </table>
+    </div>
+   <!-- <div class="reg" >
+        <p class="p1">商家秀</p>
+        <p class="p2">Copyright &reg 2008-2016</p>
+    </div>-->
+
+
+
+</div>
+<script src="js/jquery.min.js"></script>
+<!-- <script src="jquery.lazyload.min.js"></script> -->
+<script src="js/iscroll.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/jweixin-1.2.0.js"></script>
+<script src="js/vue-lazyload.js"></script>
+<script>
+    function changeinput(obj) {
+        $(obj).css({"background-position":"0.1rem","width":"80%","text-align":"left","padding-left":"0.5rem","margin-left":"0.2rem"});
+        $(".search").css("text-align","left");
+        $(".search_a").css("display","block")
+    }
+    (function () {
+        var main = new Vue({
+            "el": "body",
+            "data": {
+                "userlist":[],
+                "username":"",
+                "top": {
+                    "onoff": false
+                },
+                "stauss": [
+                    {'a': '全部','onoff':true},
+                    {'a': '未开始','onoff':false},
+                    {'a': '进行中','onoff':false},
+                    {'a': '已结束','onoff':false},
+                    {'a': '已下架','onoff':false}
+                ]
+            },
+            "watch": {},
+            "methods": {
+                _search:function() { //搜索用户
+                    var _this = this;
+                    var adminid = window.location.href.split("=")[1];
+                     $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/userlist",
+                        data:{"bargain_id":adminid,"username":_this.username},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                _this.userlist=data;
+                            }
+                        },
+                        error:function () {
+                           
+                        }
+                    })
+                },
+                chack_status:function (id,ty,index) { // 改变兑换状态
+                     var _this = this;
+                     console.log( id,ty );
+                     $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/user_update_status",
+                        data:{"user_id":id,"status":ty},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                _this.userlist[index].status = ty;
+                            }
+                        },
+                        error:function () {
+                           
+                        }
+                    })
+                }
+            },
+            "ready": function () {
+                var _this = this;
+                var adminid = window.location.href.split("=")[1];
+                 $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "http://master.echao.com/bargain/index.php/Home/BargainAdmin/userlist",
+                    data:{"bargain_id":adminid},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            _this.userlist=data;
+                            console.log(111444,data);
+                        }
+                    },
+                    error:function () {
+                    }
+                })
+            }
+        });
+
+    })();
+</script>
+</body>
+</html>

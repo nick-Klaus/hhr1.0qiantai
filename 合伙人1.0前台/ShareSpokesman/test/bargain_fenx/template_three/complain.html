@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+<meta http-equiv="Cache-Control" content="must-revalidate">
+<script>
+    setRem();
+    window.addEventListener("orientationchange", setRem, false);
+    window.addEventListener("resize", setRem, false);      
+
+    function setRem(){
+        var html = document.getElementsByTagName('html')[0];
+        
+        var pageWidth = html.getBoundingClientRect().width;
+
+        pageWidth = pageWidth > 750 ? 750 : pageWidth;
+        
+        html.style.fontSize = pageWidth / 7.5 + "px";
+
+    }
+
+</script>
+
+
+<title></title>
+</head>
+
+<style>
+  
+/*初始化*/
+ *{font-size:15px;box-sizing: border-box;}
+article,aside,audio,body,dd,div,dl,dt,footer,form,h1,h2,h3,h4,h5,h6,header,hr,iframe,input,label,menu,nav,ol,p,section,select,td,textarea,th,time,ul,video,span,img{margin:0;padding:0;}
+article,aside,audio,canvas,footer,header,nav,section,video{display:block}
+input::-webkit-search-cancel-button{display:none;}
+form{display:inline}
+input,button,select,textarea{font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;}
+html{width:100%;height:100%;overflow: hidden;}
+body{color:#141414;word-wrap:break-all;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;width:100%;height:100%;background:#fbf9fe;-webkit-tap-highlight-color:rgba(93,156,236,0.5);}
+textarea{resize:none;-webkit-appearance:none;}
+
+iframe,img{border:0;}
+ol,ul{list-style:none;}
+h1,h2,h3,h4,h5,h6{color:#141414;font-weight:400}
+input,label,select,textarea{outline:0;-webkit-user-modify:read-write-plaintext-only;-webkit-tap-highlight-color:transparent;}
+button{-webkit-appearance:none;outline:0;}
+label{-webkit-user-modify:read-only}
+input{border:none;background:0 0;-webkit-appearance:none;}
+input[type=search],input[type=text]{padding-top:0.1rem!important;padding-bottom:0.1rem!important;}
+a{color:#141414;text-decoration:none;}
+select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit-box-shadow:none;box-shadow:none;-webkit-appearance:none}
+
+.clearfix:after{clear:both;content:"";display: block;}
+.main{width:100%;height:100%;padding-bottom:0.2rem;position: relative;z-index: 1;display: none;}
+
+/* 头部 */
+.complain_head{height:0.74rem;padding:0 0.3rem;line-height: 0.8rem;font-size: 0.32rem;color:#999999;}
+.complain_main{padding-left:0.3rem;background-color: #fff;border-top:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;}
+.complain_info{width:100%;height:0.88rem;border-bottom:1px solid #d9d9d9;font-size: 0.3rem;line-height: 0.87rem;color:#000;position: relative;}
+.complain_info:last-child{border:none;}
+.complain_info dd{position: absolute;width:0.3rem;height:0.24rem;right:0.37rem;top:0.32rem;}
+.complain_info dd img{float:left;width:100%;}
+
+.complain_text{height:2.3rem;border-top:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;padding:0.2rem 0.3rem 0;background-color: #fff;}
+.complain_text textarea{width:100%;height:1.5rem;font-size: 0.3rem;border:none;line-height: 0.4rem;color:#000;}
+.complain_text_box{width:100%;height:0.4rem;line-height: 0.34rem;font-size: 0.3rem;color:#b2b2b2;text-align: right;}
+
+.complain_tel{width:100%;height:0.88rem;border-top:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;padding:0 0.3rem;background-color: #fff;}
+.complain_tel input{width:100%;height:100%;font-size: 0.3rem;}
+
+.complain_btn{width:100%;height:1.48rem;padding:0.3rem;position: absolute;left:0;bottom:0;z-index: 10;background-color: #fbf9fe;}
+.complain_btn button{width:100%;height:100%;background-color: #1aad19;border-radius: 0.06rem;color:#fff;border:1px solid #158b14;font-size: 0.32rem;}
+
+::-webkit-input-placeholder{color: #b2b2b2;} 
+:-moz-placeholder{ color: #b2b2b2; } 
+::-moz-placeholder{color: #b2b2b2; } 
+:-ms-input-placeholder{color: #b2b2b2; }
+
+#scroller {
+  position: absolute;
+  z-index: 1;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  width: 100%;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* 提示语 */
+.middle_text{width:100%;height:0.88rem;text-align: center;position: absolute;left:0;top:calc(50% - 0.44rem);z-index: 12;display: none}
+.middle_text_box{display: inline-block;max-width: 6.8rem;padding:0 0.2rem;line-height: 0.88rem;color:#fff;font-size: 0.3rem;background-color: rgba(0,0,0,0.5);border-radius: 0.06rem;}
+
+
+
+
+</style>
+
+<body>
+
+
+<div class="main">
+
+    <div id="scroller">
+
+        <div class="complain_head">请选择投诉原因</div>
+
+        <!-- 投诉内容 -->
+
+        <div class="complain_main">
+            <div class="complain_info" @click=" base.tabs = 'a' ">
+                活动虚假、活动不真实
+                <dd class="clearfix" v-show=" base.tabs == 'a' "><img src="../image/duihao.png" alt=""></dd>
+            </div>
+            <div class="complain_info" @click=" base.tabs = 'b' ">
+                诱导分享、诱导关注
+                <dd class="clearfix" v-show=" base.tabs == 'b' "><img src="../image/duihao.png" alt=""></dd>
+            </div>
+            <div class="complain_info" @click=" base.tabs = 'c' ">
+                欺诈、违法
+                <dd class="clearfix" v-show=" base.tabs == 'c' "><img src="../image/duihao.png" alt=""></dd>
+            </div>
+            <div class="complain_info" @click=" base.tabs = 'd' ">
+                色情、暴力
+                <dd class="clearfix" v-show=" base.tabs == 'd' "><img src="../image/duihao.png" alt=""></dd>
+            </div>
+            <div class="complain_info" @click=" base.tabs = 'e' ">
+                其他
+                <dd class="clearfix" v-show=" base.tabs == 'e' "><img src="../image/duihao.png" alt=""></dd>
+            </div>
+        </div>
+
+        <!-- 投诉描述 -->
+        <div class="complain_head">投诉描述</div>
+        <div class="complain_text">
+            <textarea v-model="base.text"></textarea>
+            <div class="complain_text_box">{{base.length}}/200</div>
+        </div>
+
+        <!-- 联系方式 -->
+        <div class="complain_head">联系方式</div>
+        <div class="complain_tel">
+            <input type="tel" maxlength="11" placeholder="请填写您的联系方式，以便联系">
+        </div>
+
+    </div>
+
+</div>
+
+<div class="complain_btn">
+    <button @click="_subText()">提交投诉</button>
+</div>
+
+<div class="middle_text">
+    <div class="middle_text_box">提交成功！3秒后自动返回活动页</div>
+</div>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/iscroll.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/vue.min.js"></script>
+<script>
+
+    var myScroll;
+
+    function loaded() {
+        setTimeout(function(){
+            myScroll = new IScroll('.main', {
+                            preventDefault:false,
+                            scrollbars: true,
+                            mouseWheel: true,
+                            interactiveScrollbars: true,
+                            fadeScrollbars: true
+                        });
+        },100)
+    }
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false); 
+    window.addEventListener('load', loaded, false);
+
+
+    (function(){
+        $(".loading").show();
+        var main = new Vue({
+            "el" : "body",
+            "data" : {
+                "base":{
+                    "tabs" : 'a',
+                    "length" : 0,
+                    "text" : '',
+                }
+
+            },
+            "watch" : {
+                "base.text" : function(val){
+                    var _this = this;
+                    if( val ){
+                        if( val.length < 200 ){
+                            _this.base.length = val.length;
+                        } else {
+                            _this.base.length = 200;
+                            _this.base.text = val.substring(0,200);
+                        }
+                    } else {
+                        _this.base.length = 0;
+                    }
+                }
+            },
+            "methods" : {
+                _subText : function(){
+                    var _this = this;
+                    var href = window.location.href;
+                    var www = 'http://weixin.echao.com/web_activity/bargain/template_three/index.html?' + href.split('?')[1];
+                    $('.middle_text').fadeIn(100);
+                    setTimeout(function(){
+                        $('.middle_text').fadeOut(100);
+                        location.href = www;
+
+                    },3000)
+                }
+            },
+            "ready" : function() {
+                $(".loading").hide();
+                $(".main").show();
+
+            }
+        });
+    })();
+
+</script>
+
+
+</body>
+
+
+
+</html>

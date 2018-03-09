@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width,initial-scale=1,  minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="must-revalidate">
+    <script>
+        setRem();
+        window.addEventListener("orientationchange", setRem, false);
+        window.addEventListener("resize", setRem, false);
+        function setRem(){
+            var html = document.getElementsByTagName('html')[0];
+
+            var pageWidth = html.getBoundingClientRect().width;
+
+            pageWidth = pageWidth > 750 ? 750 : pageWidth;
+
+            html.style.fontSize = pageWidth / 7.5 + "px";
+
+        }
+    </script>
+    <title></title>
+    <link rel="stylesheet" href="js/bootstrap.min.css">
+</head>
+
+<style>
+    /*初始化*/
+    *{font-size:15px;box-sizing: border-box;}
+    article,aside,audio,body,dd,div,dl,dt,footer,form,h1,h2,h3,h4,h5,h6,header,hr,iframe,input,label,menu,nav,ol,p,section,select,td,textarea,th,time,ul,video,span,img{margin:0;padding:0;}
+    article,aside,audio,canvas,footer,header,nav,section,video{display:block}
+    input::-webkit-search-cancel-button{display:none;}
+    form{display:inline}
+    input,button,select,textarea{font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;}
+    html{width:100%;height:100%;overflow: hidden;}
+    body{color:#141414;word-wrap:break-all;font-size:100%;font-family:"微软雅黑",Helvetica,STHeiti,Droid Sans Fallback;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;width:100%;height:100%;background:#ffffff;-webkit-tap-highlight-color:rgba(93,156,236,0.5);}
+    textarea{resize:none;-webkit-appearance:none;overflow: hidden;}
+
+    iframe,img{border:0;}
+    ol,ul{list-style:none;}
+    h1,h2,h3,h4,h5,h6{color:#141414;font-weight:400}
+    input,label,select,textarea{outline:0;-webkit-user-modify:read-write-plaintext-only;-webkit-tap-highlight-color:transparent;}
+    button{-webkit-appearance:none;outline:0;}
+    label{-webkit-user-modify:read-only}
+    input{border:none;background:0 0;-webkit-appearance:none;}
+    input[type=search],input[type=text]{padding-top:0.1rem!important;padding-bottom:0.1rem!important;}
+    a{color:#141414;text-decoration:none;}
+    select{-webkit-border-radius:0;border-radius:0;-webkit-border-image:none;-webkit-box-shadow:none;box-shadow:none;-webkit-appearance:none}
+
+    .clearfix:after{clear:both;content:"";display: block;}
+    .main{width:100%;height:100%;background:#ffffff;padding-bottom:0.2rem;overflow: hidden;overflow-y: auto;-webkit-overflow-scrolling: touch;}
+
+    /*活动*/
+    .act{background-color: #f4f4f4;width: 100%;padding: 0.2rem 0.1rem 0.1rem 0.2rem;overflow: auto;margin-bottom: 0.2rem}
+    .act .act_log{width: 3.58rem;height: 3.58rem;float: left}
+    .act .act_log img{width: 100%;height: 100%}
+    .act_content{margin:0 0 0.2rem 3.8rem;}
+    .act_content span{width: 0.58rem;height:0.11rem;display: inline-block}
+    .act_content span img{width: 0.7rem;height: 0.2rem}
+    .act .act_content_one {}
+    .act .act_content_two{font-size: 0.25rem}
+    .act_btn{text-align: center}
+    .act a{width: 49%;height:0.7rem;line-height: 0.3rem;font-size: 0.30rem}
+
+</style>
+<body>
+
+    <div class="main">
+        <div id="scroller">
+            <div v-for="item in base.template_list">
+
+                <div class="act clearfix">
+                    <span class="act_log"><img src="{{item.logo}}" alt=""></span>
+                    <div class="act_content clearfix">
+                        <p class="act_content_one"><strong>{{item.name}}</strong><span><img src="images/act_slogan.png" alt=""></span></p>
+                        <p class="act_content_two">{{item.bargain_des}}</p>
+                    </div>
+                    <div class="act_btn ">
+                        <a href="{{item.list_url}}" class="btn btn-lg btn-default">查看示例</a>
+                        <!--<a href="http://weixin.echao.com/web_activity/bargain/template.html?userid=23332&actid=444" class="btn btn-lg btn-default">查看示例</a>-->
+                        <!--<a href="{{item.add_url}}" class="btn btn-lg btn-success">马上制作</a>-->
+                        <a href="{{item.add_url}}" class="btn btn-lg btn-success">马上制作</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/iscroll-probe.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    <script src="js/vue-lazyload.js"></script>
+    <script>
+        var myScroll;
+        function loaded() {
+            setTimeout(function(){
+                myScroll = new IScroll('.main', {
+                    preventDefault:false,
+                    scrollbars: false,
+                    mouseWheel: true,
+                    interactiveScrollbars: true,
+                    checkDOMChanges: true,
+                    fadeScrollbars: true,
+
+                });
+            },100)
+        }
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        window.addEventListener('load', loaded, false);
+        (function () {
+            var main = new Vue({
+                "el": "body",
+                "data": {
+                    "loadings":false,
+                    "base":{
+                        "tel":"",
+                        "password":"",
+                        "template_list":[],
+                        "adminid":"",
+                    },
+                    "top": {
+                        "onoff": false,
+                        "text":""
+                    },
+                    "stauss": [
+                        {'a': '全部','onoff':true},
+                        {'a': '未开始','onoff':false},
+                        {'a': '进行中','onoff':false},
+                        {'a': '已结束','onoff':false},
+                        {'a': '已下架','onoff':false}
+                    ]
+                },
+                "watch": {
+
+                },
+                "methods": {
+                },
+                "ready": function () {
+                    var _this = this;                    
+                    var adminid = localStorage.getItem('adminid');
+                    if( !adminid ){
+                        window.location.href="./login.html";
+                    }
+                    _this.base.adminid=adminid;
+                    // 获取所有的模板信息
+                     $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "http://master.echao.com/bargain/index.php/Home/BargainTemplate/template_list",
+                        data:{},
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                _this.base.template_list = data;
+                                console.log(2223333,data);
+                            }
+                            console.log(1112222,data);
+                        },
+                        error:function () {
+                        
+                        }
+                    })
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
